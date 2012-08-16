@@ -1,0 +1,3 @@
+[submodule "lib/urban-airship"]
+	path = lib/urban-airship
+	url = git://github.com/urbanairship/php-library.git
