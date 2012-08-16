@@ -96,8 +96,8 @@ class Blimply {
 	
 }
 
-// define BLIMPLY_NOINIT costant somewhere in your theme to easily subclass Blimply
-if ( ! defined( 'BLIMPLY_NOINIT' ) ) {
+// define BLIMPLY_NOINIT constant somewhere in your theme to easily subclass Blimply
+if ( ! defined( 'BLIMPLY_NOINIT' ) || defined( 'BLIMPLY_NOINIT' ) && BLIMPLY_NOINIT ) {
 	global $blimply;
 	$blimply = new Blimply;
 }
