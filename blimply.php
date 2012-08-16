@@ -69,16 +69,21 @@ class Blimply {
 	 * @param string $method
 	 */
 	function request( Airship $airship, $method = '', $args = array(), $tokens = array() ) {
-		try{
-			$response = $airship->$method( $args, $tokens );
-		} catch ( Exception $e ) {
-			$exception_class =  get_class( $e );
-			if ( is_admin() ) {
-				// @todo implement admin notification of misconfiguration
-				//echo $exception_class;
+		
+		if ( in_array( $method, array( 'register', 'deregister', 'feedback', 'push', 'broadcast' ) ) ) {
+			try{
+				$response = $airship->$method( $args, $tokens );
+			} catch ( Exception $e ) {
+				$exception_class =  get_class( $e );
+				if ( is_admin() ) {
+					// @todo implement admin notification of misconfiguration
+					//echo $exception_class;
+				}
 			}
+			return $response;
+		} else {
+			// @todo illegal request
 		}
-		return $response;
 	}
 	
 }
