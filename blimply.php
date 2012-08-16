@@ -28,9 +28,12 @@ define( 'BLIMPLY_VERSION', '0.1' );
 define( 'BLIMPLY_ROOT' , dirname( __FILE__ ) );
 define( 'BLIMPLY_FILE_PATH' , BLIMPLY_ROOT . '/' . basename( __FILE__ ) );
 define( 'BLIMPLY_URL' , plugins_url( '/', __FILE__ ) );
+define( 'BLIMPLY_PREFIX' , 'blimply' );
 
 // Bootstrap
 require_once( BLIMPLY_ROOT . '/lib/urban-airship/urbanairship.php' );
+require_once( BLIMPLY_ROOT . '/lib/blimply-settings.php' );
+
 class Blimply {
 	
 	protected $applications = array();
@@ -43,38 +46,22 @@ class Blimply {
 		//$broadcast_message = array('aps'=>array('alert'=>'hello to all'));
 		//echo $this->request( $this->airships['test'], 'broadcast', $broadcast_message );
 		add_action( 'admin_init', array( $this, 'action_admin_init' ) );
-		add_action( 'admin_menu', array( $this, 'action_admin_menu' ) );
 	}
 	
 	function action_admin_init() {
 		// @todo init only on post edit screens and in dashboard
-		$this->applications[] = array( 'name' => 'test', 'key' => 'SYk74m98TOiUhvH29b5l_Q', 'secret' => '1S5xJZHbS0S6vahN6s1Jdg' /*'1S5xJZHbS0S6vahN6s1Jdg'*/ );
-		foreach( $this->applications as $app ) {
-			$this->airships[ $app['name'] ] = new Airship( $app['key'], $app['secret'] );
-		}		
+		$options = get_option( 'blimply_options' );
+		//var_dump($options);
+		//list( $name, $key, $secret ) = $options;
+		//var_dump( $name );
+		$this->airships[ $options['blimply_name'] ] = new Airship( $options['blimply_app_key'], $options['blimply_app_secret'] );
+		//}		
 	}
 	
 	function action_save_post() {
 		
 	}
-	
-	/**
-	 *
-	 */
-	function action_admin_menu() {
-		add_options_page(
-			__( 'Blimply Settings', 'blimply' ),
-			__( 'Blimply Settings', 'blimply' ),
-			apply_filters( 'blimply_settings_cap', 'manage_options' ),
-			'blimply',
-			array( $this, 'admin_ui' )
-		);
-	}
-	
-	function admin_ui() {
 		
-	}
-	
 	/**
 	 * Wrapper to make a remote request to UrbanAirship
 	 *
