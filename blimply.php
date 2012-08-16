@@ -29,32 +29,71 @@ define( 'BLIMPLY_ROOT' , dirname( __FILE__ ) );
 define( 'BLIMPLY_FILE_PATH' , BLIMPLY_ROOT . '/' . basename( __FILE__ ) );
 define( 'BLIMPLY_URL' , plugins_url( '/', __FILE__ ) );
 
-
+// Bootstrap
+require_once( BLIMPLY_ROOT . '/lib/urban-airship/urbanairship.php' );
 class Blimply {
 	
 	protected $applications = array();
+	protected $airships;
 	/**
 	 * Instantiate
 	 */
 	function __construct() {
-		$this->applications[] = array( 'key' => 'SYk74m98TOiUhvH29b5l_Q', 'secret' => 'sBPXJ92QQ6OY_lYjzb93ZA' );
+
+		//$broadcast_message = array('aps'=>array('alert'=>'hello to all'));
+		//echo $this->request( $this->airships['test'], 'broadcast', $broadcast_message );
+		add_action( 'admin_init', array( $this, 'action_admin_init' ) );
+		add_action( 'admin_menu', array( $this, 'action_admin_menu' ) );
 	}
 	
-	function action_init() {
-		
+	function action_admin_init() {
+		// @todo init only on post edit screens and in dashboard
+		$this->applications[] = array( 'name' => 'test', 'key' => 'SYk74m98TOiUhvH29b5l_Q', 'secret' => '1S5xJZHbS0S6vahN6s1Jdg' /*'1S5xJZHbS0S6vahN6s1Jdg'*/ );
+		foreach( $this->applications as $app ) {
+			$this->airships[ $app['name'] ] = new Airship( $app['key'], $app['secret'] );
+		}		
 	}
 	
 	function action_save_post() {
 		
 	}
 	
-	function admin_menu() {
+	/**
+	 *
+	 */
+	function action_admin_menu() {
+		add_options_page(
+			__( 'Blimply Settings', 'blimply' ),
+			__( 'Blimply Settings', 'blimply' ),
+			apply_filters( 'blimply_settings_cap', 'manage_options' ),
+			'blimply',
+			array( $this, 'admin_ui' )
+		);
+	}
+	
+	function admin_ui() {
 		
 	}
 	
-	function ua_request() {
-		
+	/**
+	 * Wrapper to make a remote request to UrbanAirship
+	 *
+	 * @param Airship $airship an instance of Airship php
+	 * @param string $method
+	 */
+	function request( Airship $airship, $method = '', $args = array(), $tokens = array() ) {
+		try{
+			$response = $airship->$method( $args, $tokens );
+		} catch ( Exception $e ) {
+			$exception_class =  get_class( $e );
+			if ( is_admin() ) {
+				// @todo implement admin notification of misconfiguration
+				//echo $exception_class;
+			}
+		}
+		return $response;
 	}
+	
 }
 
 // define BLIMPLY_NOINIT costant somewhere in your theme to easily subclass Blimply

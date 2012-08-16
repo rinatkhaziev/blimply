@@ -17,6 +17,7 @@ You will need [Urban Airship](http://urbanairship.com/) account in order to be a
 
 == Installation ==
 
+1. Install HTTP_Request pear package `pear install HTTP_Request` (this is a dependency for Urban Airship PHP SDK)
 1. Upload `plugin-name.php` to the `/wp-content/plugins/` directory
 1. Activate the plugin through the 'Plugins' menu in WordPress
 1. Set application key and application secret in 'Settings' -> 'Blimply'
