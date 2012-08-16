@@ -2,7 +2,6 @@
 /**
  * Define Constants
  */
-//define('BLIMPLY_PREFIX', 'wptuts'); // used to prefix the individual setting field id see blimply_options_page_fields()
 define('BLIMPLY_PAGE_BASENAME', 'blimply'); // the settings page slug
 
 /**
