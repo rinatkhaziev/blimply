@@ -47,21 +47,28 @@ class Blimply {
 		add_action( 'add_meta_boxes', array( $this, 'post_meta_boxes' ) );
 	}
 	
+
+	/**
+	*
+	* Set basic app properties 
+	*
+	*
+	*/
 	function action_admin_init() {
 		// @todo init only on post edit screens and in dashboard
 		$this->options = get_option( 'blimply_options' );
 		$this->airships[ $this->options['blimply_name'] ] = new Airship( $this->options['blimply_app_key'], $this->options['blimply_app_secret'] );
-
-
-		// $broadcast_message = array( 'aps' => array( 'alert' => 'hello to all', 'badge' => '+1' ) );
-		// echo $this->request( $this->airships[ $this->options['blimply_name'] ], 'broadcast', $broadcast_message );
-	
 	}
 	
+	/**
+	* Send a push notification if checkbox is checked
+	*/
 	function action_save_post( $post_id ) {
 		if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) 
 			return;
-		if ( !wp_verify_nonce( $_POST['blimply_nonce'], plugin_basename( __FILE__ ) ) )
+		if ( !wp_verify_nonce( $_POST['blimply_nonce'], BLIMPLY_FILE_PATH ) )
+      		return;
+      	if ( 1 == get_post_meta( $post->ID, 'blimply_push_sent', true ) )
       		return;
 
       	if ( 1 == $_POST['blimply_push'] ) {
@@ -81,14 +88,17 @@ class Blimply {
 	function post_meta_box( $post ) {
 		$is_push_sent = get_post_meta( $post->ID, 'blimply_push_sent', true );
 		if ( 1 != $is_push_sent ) {
-			wp_nonce_field( plugin_basename( __FILE__ ), 'blimply_nonce' );
+			wp_nonce_field( BLIMPLY_FILE_PATH, 'blimply_nonce' );
 			echo '<label for="blimply_push">';
 		    	_e("Send push notification", 'blimply' );
 			echo '</label> ';
 			echo '<input type="hidden" id="blimply_push" name="blimply_push" value="0" />';
 			echo '<input type="checkbox" id="blimply_push" name="blimply_push" value="1" />';
 		} else {
-			_e( 'Push notification is already sent', 'blimply' );
+			// $post_types = get_post_types( array( 'public' => true ), 'objects');
+			// foreach ( $post_types as $post_type => $props )
+			// 	remove_meta_box( BLIMPLY_PREFIX, $post_type, 'side' );
+				_e( 'Push notification is already sent', 'blimply' );
 		}
 	}
 		
