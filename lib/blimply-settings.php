@@ -106,8 +106,8 @@ function blimply_register_settings(){
  * Group scripts (js & css)
  */
 function blimply_settings_scripts(){
-	wp_enqueue_style('blimply_theme_settings_css', get_template_directory_uri() . '/lib/css/blimply_theme_settings.css');
-	wp_enqueue_script( 'blimply_theme_settings_js', get_template_directory_uri() . '/lib/js/blimply_theme_settings.js', array('jquery'));
+//	wp_enqueue_style('blimply_theme_settings_css', get_template_directory_uri() . '/lib/css/blimply_theme_settings.css');
+//	wp_enqueue_script( 'blimply_theme_settings_js', get_template_directory_uri() . '/lib/js/blimply_theme_settings.js', array('jquery'));
 }
 
 /**
