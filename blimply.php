@@ -97,6 +97,9 @@ class Blimply {
 	 *
 	 * @param Airship $airship an instance of Airship php
 	 * @param string $method
+	 * @param mixed $args
+	 * @param mixed $tokens
+	 * @return mixed response or Exception or error
 	 */
 	function request( Airship &$airship, $method = '', $args = array(), $tokens = array() ) {
 		
