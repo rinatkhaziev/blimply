@@ -78,6 +78,11 @@ class Blimply {
       	}
 	}
 
+	/**
+	* Register metabox for selected post types
+	*
+	* @todo implement ability to actually pick specific post types
+	*/
 	function post_meta_boxes() {
 		$post_types = get_post_types( array( 'public' => true ), 'objects');
 		foreach ( $post_types as $post_type => $props )
@@ -85,6 +90,9 @@ class Blimply {
 
 	}
 
+	/**
+	* Render HTML
+	*/
 	function post_meta_box( $post ) {
 		$is_push_sent = get_post_meta( $post->ID, 'blimply_push_sent', true );
 		if ( 1 != $is_push_sent ) {
