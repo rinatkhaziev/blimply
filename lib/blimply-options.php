@@ -44,7 +44,16 @@ function blimply_options_page_fields() {
 		"type"    => "text",
 		"std"     => __('my-blimply','blimply'),
 		"class"   => "nohtml"
-	);		
+	);
+	$options[] = array(
+		"section" => "urban_airship",
+		"id"      => BLIMPLY_PREFIX . "_tags",
+		"title"   => __( 'Enter Urban Airship Tags', 'blimply' ),
+		"desc"    => __( 'Separate tags by commas. Tags will be automatically added to Urban Airship on save. You will be able to send pushes to selected tags', 'blimply' ),
+		"type"    => "textarea",
+		"std"     => __('','blimply'),
+		"class"   => "nohtml"
+	);
 
 	
 	return $options;	
@@ -55,8 +64,8 @@ function blimply_options_page_fields() {
  */
 function blimply_options_page_contextual_help() {
 	
-	$text 	= "<h3>" . __('Wptuts Settings - Contextual Help','blimply') . "</h3>";
-	$text 	.= "<p>" . __('Contextual help goes here. You may want to use different html elements to format your text as you want.','blimply') . "</p>";
+	$text 	= "<h3>" . __('Blimply','blimply') . "</h3>";
+	$text 	.= "<p>" . __('Urban Airship and Blimply Settings.','blimply') . "</p>";
 	
 	// must return text! NOT echo
 	return $text;

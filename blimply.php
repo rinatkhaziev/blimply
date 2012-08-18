@@ -37,7 +37,7 @@ require_once( BLIMPLY_ROOT . '/lib/blimply-settings.php' );
 
 class Blimply {
 	
-	protected $airships, $options;
+	protected $airships, $airship, $options, $tags;
 	/**
 	 * Instantiate
 	 */
@@ -45,6 +45,7 @@ class Blimply {
 		add_action( 'admin_init', array( $this, 'action_admin_init' ) );
 		add_action( 'save_post', array( $this, 'action_save_post' ) );
 		add_action( 'add_meta_boxes', array( $this, 'post_meta_boxes' ) );
+		add_action( 'update_option_blimply_options', array( $this, 'sync_airship_tags' ), 5, 2 );
 	}
 	
 
@@ -52,12 +53,35 @@ class Blimply {
 	*
 	* Set basic app properties 
 	*
-	*
 	*/
 	function action_admin_init() {
 		// @todo init only on post edit screens and in dashboard
 		$this->options = get_option( 'blimply_options' );
+		$this->tags = get_option( 'blimply_tags' );
 		$this->airships[ $this->options['blimply_name'] ] = new Airship( $this->options['blimply_app_key'], $this->options['blimply_app_secret'] );
+		// Pass the reference to convenience var
+		// We don't use multiple Airships yet.
+		$this->airship = &$this->airships[ $this->options['blimply_name'] ];
+	}
+	
+	function sync_airship_tags( $old, $new ) {
+		
+		if ( $new['blimply_tags'] != $old['blimply_tags'] ) {
+			$tags = explode( ',', $new['blimply_tags'] );
+		}
+			$tags = explode( ',', $this->options['blimply_tags'] );
+			$tags_slugs = array();
+			foreach ( $tags as $tag ) {
+				$tag_slug = sanitize_title_with_dashes( $tag );
+				try {
+					$response = $this->airship->_request( BASE_URL . "/tags/{$tag_slug}", 'PUT', null );
+				} catch ( Exception $e ) {
+					
+				}
+				if ($response[0] == 200 )
+					$tags_slugs[$tag_slug] = $tag;
+			}
+			update_option( 'blimply_tags', $tags_slugs );
 	}
 	
 	/**
@@ -72,8 +96,9 @@ class Blimply {
       		return;
 
       	if ( 1 == $_POST['blimply_push'] ) {
-      		$broadcast_message = array( 'aps' => array( 'alert' => 'push from published post: ' . $_POST['post_title'], 'badge' => '+1' ) );
-      		$this->request( $this->airships[ $this->options['blimply_name'] ], 'broadcast', $broadcast_message  );
+			$alert = !empty( $_POST['blimply_push_alert'] ) ? esc_attr( $_POST['blimply_push_alert'] ) : esc_attr( $_POST['post_title'] );
+      		$broadcast_message = array( 'aps' => array( 'alert' => '' . $alert, 'badge' => '+1' ) );
+      		$this->request( $this->airship, 'broadcast', $broadcast_message  );
       		update_post_meta( $post_id, 'blimply_push_sent', true );
       	}
 	}
@@ -102,10 +127,12 @@ class Blimply {
 			echo '</label> ';
 			echo '<input type="hidden" id="blimply_push" name="blimply_push" value="0" />';
 			echo '<input type="checkbox" id="blimply_push" name="blimply_push" value="1" />';
+			echo '<br/><label for="blimply_push_alert">';
+		    	_e("Push message", 'blimply' );
+			echo '</label><br/> ';
+			echo '<textarea id="blimply_push_alert" name="blimply_push_alert">' . $post->post_title . '</textarea>';	
+						
 		} else {
-			// $post_types = get_post_types( array( 'public' => true ), 'objects');
-			// foreach ( $post_types as $post_type => $props )
-			// 	remove_meta_box( BLIMPLY_PREFIX, $post_type, 'side' );
 				_e( 'Push notification is already sent', 'blimply' );
 		}
 	}
@@ -113,7 +140,7 @@ class Blimply {
 	/**
 	 * Wrapper to make a remote request to Urban Airship
 	 *
-	 * @param Airship $airship an instance of Airship php
+	 * @param Airship $airship an instance of Airship passed by reference
 	 * @param string $method
 	 * @param mixed $args
 	 * @param mixed $tokens

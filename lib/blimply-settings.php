@@ -1,7 +1,7 @@
 <?php
 /**
  * Define Constants
- */
+ */ 
 define('BLIMPLY_PAGE_BASENAME', 'blimply'); // the settings page slug
 
 /**
@@ -379,7 +379,7 @@ function blimply_validate_options($input) {
 								);
 							}
 						break;
-						
+
 						// a "cover-all" fall-back when the class argument is not set
 						default:
 							// accept only a few inline html elements
@@ -470,8 +470,7 @@ function blimply_validate_options($input) {
 							//accept the input only after stripping out all html, extra white space etc!
 							$input[$option['id']] 		= wp_strip_all_tags($input[$option['id']]); // need to add slashes still before sending to the database
 							$valid_input[$option['id']] = addslashes($input[$option['id']]);
-						break;
-						
+						break;						
 						// a "cover-all" fall-back when the class argument is not set
 						default:
 							// accept only limited html
