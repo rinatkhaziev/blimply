@@ -44,18 +44,7 @@ function blimply_options_page_fields() {
 		"type"    => "text",
 		"std"     => __('my-blimply','blimply'),
 		"class"   => "nohtml"
-	);
-	$options[] = array(
-		"section" => "urban_airship",
-		"id"      => BLIMPLY_PREFIX . "_tags",
-		"title"   => __( 'Enter Urban Airship Tags', 'blimply' ),
-		"desc"    => __( 'Separate tags by commas. Tags will be automatically added to Urban Airship on save. You will be able to send pushes to selected tags', 'blimply' ),
-		"type"    => "textarea",
-		"std"     => __('','blimply'),
-		"class"   => "nohtml"
-	);
-
-	
+	);	
 	return $options;	
 }
 
