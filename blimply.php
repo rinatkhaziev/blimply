@@ -109,7 +109,7 @@ class Blimply {
 	* @todo implement ability to actually pick specific post types
 	*/
 	function post_meta_boxes() {
-		$post_types = get_post_types( array( 'public' => true ), 'objects');
+		$post_types = get_post_types( array( 'public' => true ), 'objects' );
 		foreach ( $post_types as $post_type => $props )
 			add_meta_box( BLIMPLY_PREFIX, __( 'Push Notification', 'blimply' ), array( $this, 'post_meta_box' ), $post_type, 'side' );		
 
@@ -123,15 +123,14 @@ class Blimply {
 		if ( 1 != $is_push_sent ) {
 			wp_nonce_field( BLIMPLY_FILE_PATH, 'blimply_nonce' );
 			echo '<label for="blimply_push">';
-		    	_e("Send push notification", 'blimply' );
+		    	_e( 'Send push notification', 'blimply' );
 			echo '</label> ';
 			echo '<input type="hidden" id="blimply_push" name="blimply_push" value="0" />';
 			echo '<input type="checkbox" id="blimply_push" name="blimply_push" value="1" />';
 			echo '<br/><label for="blimply_push_alert">';
-		    	_e("Push message", 'blimply' );
+		    	_e( 'Push message', 'blimply' );
 			echo '</label><br/> ';
 			echo '<textarea id="blimply_push_alert" name="blimply_push_alert">' . $post->post_title . '</textarea>';	
-						
 		} else {
 				_e( 'Push notification is already sent', 'blimply' );
 		}
@@ -152,7 +151,7 @@ class Blimply {
 			try {
 				$response = $airship->$method( $args, $tokens );
 			} catch ( Exception $e ) {
-				$exception_class =  get_class( $e );
+				$exception_class = get_class( $e );
 				if ( is_admin() ) {
 					// @todo implement admin notification of misconfiguration
 					//echo $exception_class;

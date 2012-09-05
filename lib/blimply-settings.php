@@ -2,7 +2,7 @@
 /**
  * Define Constants
  */ 
-define('BLIMPLY_PAGE_BASENAME', 'blimply'); // the settings page slug
+define( 'BLIMPLY_PAGE_BASENAME', 'blimply' ); // the settings page slug
 
 /**
  * Specify Hooks/Filters
@@ -14,7 +14,7 @@ add_action( 'admin_init', 'blimply_register_settings' );
  * Include the required files
  */
 // page settings sections & fields as well as the contextual help text.
-require_once('blimply-options.php');
+require_once( 'blimply-options.php' );
 
 /**
  * Helper function for defining variables for the current page
@@ -27,7 +27,7 @@ function blimply_get_settings() {
 	
 	// put together the output array 
 	$output['blimply_option_name'] 		= 'blimply_options'; // the option name as used in the get_option() call.
-	$output['blimply_page_title'] 		= __( 'Blimply Settings Page','blimply'); // the settings page title
+	$output['blimply_page_title'] 		= __( 'Blimply Settings Page','blimply' ); // the settings page title
 	$output['blimply_page_sections'] 	= blimply_options_page_sections(); // the setting section
 	$output['blimply_page_fields'] 		= blimply_options_page_fields(); // the setting fields
 	$output['blimply_contextual_help'] 	= blimply_options_page_contextual_help(); // the contextual help
@@ -83,10 +83,10 @@ function blimply_register_settings(){
 	$blimply_option_name = $settings_output['blimply_option_name'];
 	
 	//setting
-	register_setting($blimply_option_name, $blimply_option_name, 'blimply_validate_options' );
+	register_setting( $blimply_option_name, $blimply_option_name, 'blimply_validate_options' );
 	
 	//sections
-	if(!empty($settings_output['blimply_page_sections'])){
+	if(!empty( $settings_output['blimply_page_sections']) ){
 		// call the "add_settings_section" for each!
 		foreach ( $settings_output['blimply_page_sections'] as $id => $title ) {
 			add_settings_section( $id, $title, 'blimply_section_fn', __FILE__);
@@ -94,10 +94,10 @@ function blimply_register_settings(){
 	}
 		
 	//fields
-	if(!empty($settings_output['blimply_page_fields'])){
+	if(!empty( $settings_output['blimply_page_fields']) ){
 		// call the "add_settings_field" for each!
-		foreach ($settings_output['blimply_page_fields'] as $option) {
-			blimply_create_settings_field($option);
+		foreach ( $settings_output['blimply_page_fields'] as $option ) {
+			blimply_create_settings_field( $option);
 		}
 	}
 }
@@ -106,8 +106,8 @@ function blimply_register_settings(){
  * Group scripts (js & css)
  */
 function blimply_settings_scripts(){
-//	wp_enqueue_style('blimply_theme_settings_css', get_template_directory_uri() . '/lib/css/blimply_theme_settings.css');
-//	wp_enqueue_script( 'blimply_theme_settings_js', get_template_directory_uri() . '/lib/js/blimply_theme_settings.js', array('jquery'));
+//	wp_enqueue_style( 'blimply_theme_settings_css', get_template_directory_uri() . '/lib/css/blimply_theme_settings.css' );
+//	wp_enqueue_script( 'blimply_theme_settings_js', get_template_directory_uri() . '/lib/js/blimply_theme_settings.js', array( 'jquery' ) );
 }
 
 /**
@@ -121,9 +121,9 @@ function blimply_add_menu(){
 	
 	// Display Settings Page link under the "Appearance" Admin Menu
 	// add_theme_page( $page_title, $menu_title, $capability, $menu_slug, $function);
-	$blimply_settings_page = add_options_page(__('Blimply Options'), __('Blimply Options','blimply'), 'manage_options', BLIMPLY_PAGE_BASENAME, 'blimply_settings_page_fn');
+	$blimply_settings_page = add_options_page( __( 'Blimply Options' ), __( 'Blimply Options','blimply' ), 'manage_options', BLIMPLY_PAGE_BASENAME, 'blimply_settings_page_fn' );
 		// contextual help
-		if ($blimply_settings_page) {
+		if ( $blimply_settings_page ) {
 			add_contextual_help( $blimply_settings_page, $blimply_contextual_help );
 		}
 		// css & js
@@ -138,8 +138,8 @@ function blimply_add_menu(){
  * Section HTML, displayed before the first option
  * @return echoes output
  */
-function  blimply_section_fn($desc) {
-	echo "<p>" . __('Settings for this section','blimply') . "</p>";
+function  blimply_section_fn( $desc) {
+	echo "<p>" . __( 'Settings for this section','blimply' ) . "</p>";
 }
 
 /*
@@ -147,7 +147,7 @@ function  blimply_section_fn($desc) {
  * All form field types share the same function!!
  * @return echoes output
  */
-function blimply_form_field_fn($args = array()) {
+function blimply_form_field_fn( $args = array() ) {
 	
 	extract( $args );
 	
@@ -155,7 +155,7 @@ function blimply_form_field_fn($args = array()) {
 	$settings_output 	= blimply_get_settings();
 	
 	$blimply_option_name = $settings_output['blimply_option_name'];
-	$options 			= get_option($blimply_option_name);
+	$options 			= get_option( $blimply_option_name );
 	
 	// pass the standard value if the option is not yet set in the database
 	if ( !isset( $options[$id] ) && 'type' != 'checkbox' ) {
@@ -163,24 +163,24 @@ function blimply_form_field_fn($args = array()) {
 	}
 	
 	// additional field class. output only if the class is defined in the create_setting arguments
-	$field_class = ($class != '') ? ' ' . $class : '';
+	$field_class = ( $class != '' ) ? ' ' . $class : '';
 	
 	// switch html display based on the setting type.	
 	switch ( $type ) {
 		case 'text':
-			$options[$id] = stripslashes($options[$id]);
-			$options[$id] = esc_attr( $options[$id]);
+			$options[$id] = stripslashes( $options[$id] );
+			$options[$id] = esc_attr( $options[$id] );
 			echo "<input class='regular-text$field_class' type='text' id='$id' name='" . $blimply_option_name . "[$id]' value='$options[$id]' />";
-			echo ($desc != '') ? "<br /><span class='description'>$desc</span>" : "";
+			echo ( $desc != '' ) ? "<br /><span class='description'>$desc</span>" : "";
 		break;
 		
 		case "multi-text":
-			foreach($choices as $item) {
+			foreach( $choices as $item ) {
 				$item = explode("|",$item); // cat_name|cat_slug
-				$item[0] = esc_html__($item[0], 'blimply');
-				if (!empty($options[$id])) {
-					foreach ($options[$id] as $option_key => $option_val){
-						if ($item[1] == $option_key) {
+				$item[0] = esc_html__( $item[0], 'blimply' );
+				if (!empty( $options[$id]) ) {
+					foreach ( $options[$id] as $option_key => $option_val){
+						if ( $item[1] == $option_key) {
 							$value = $option_val;
 						}
 					}
@@ -189,65 +189,65 @@ function blimply_form_field_fn($args = array()) {
 				}
 				echo "<span>$item[0]:</span> <input class='$field_class' type='text' id='$id|$item[1]' name='" . $blimply_option_name . "[$id|$item[1]]' value='$value' /><br/>";
 			}
-			echo ($desc != '') ? "<span class='description'>$desc</span>" : "";
+			echo ( $desc != '' ) ? "<span class='description'>$desc</span>" : "";
 		break;
 		
 		case 'textarea':
-			$options[$id] = stripslashes($options[$id]);
+			$options[$id] = stripslashes( $options[$id]);
 			$options[$id] = esc_html( $options[$id]);
 			echo "<textarea class='textarea$field_class' type='text' id='$id' name='" . $blimply_option_name . "[$id]' rows='5' cols='30'>$options[$id]</textarea>";
-			echo ($desc != '') ? "<br /><span class='description'>$desc</span>" : ""; 		
+			echo ( $desc != '' ) ? "<br /><span class='description'>$desc</span>" : ""; 		
 		break;
 		
 		case 'select':
 			echo "<select id='$id' class='select$field_class' name='" . $blimply_option_name . "[$id]'>";
-				foreach($choices as $item) {
-					$value 	= esc_attr($item, 'blimply');
-					$item 	= esc_html($item, 'blimply');
+				foreach( $choices as $item) {
+					$value 	= esc_attr( $item, 'blimply' );
+					$item 	= esc_html( $item, 'blimply' );
 					
-					$selected = ($options[$id]==$value) ? 'selected="selected"' : '';
+					$selected = ( $options[$id]==$value) ? 'selected="selected"' : '';
 					echo "<option value='$value' $selected>$item</option>";
 				}
 			echo "</select>";
-			echo ($desc != '') ? "<br /><span class='description'>$desc</span>" : ""; 
+			echo ( $desc != '' ) ? "<br /><span class='description'>$desc</span>" : ""; 
 		break;
 		
 		case 'select2':
 			echo "<select id='$id' class='select$field_class' name='" . $blimply_option_name . "[$id]'>";
-			foreach($choices as $item) {
+			foreach( $choices as $item) {
 				
-				$item = explode("|",$item);
-				$item[0] = esc_html($item[0], 'blimply');
+				$item = explode("|",$item );
+				$item[0] = esc_html( $item[0], 'blimply' );
 				
-				$selected = ($options[$id]==$item[1]) ? 'selected="selected"' : '';
+				$selected = ( $options[$id]==$item[1]) ? 'selected="selected"' : '';
 				echo "<option value='$item[1]' $selected>$item[0]</option>";
 			}
 			echo "</select>";
-			echo ($desc != '') ? "<br /><span class='description'>$desc</span>" : "";
+			echo ( $desc != '' ) ? "<br /><span class='description'>$desc</span>" : "";
 		break;
 		
 		case 'checkbox':
 			echo "<input class='checkbox$field_class' type='checkbox' id='$id' name='" . $blimply_option_name . "[$id]' value='1' " . checked( $options[$id], 1, false ) . " />";
-			echo ($desc != '') ? "<br /><span class='description'>$desc</span>" : "";
+			echo ( $desc != '' ) ? "<br /><span class='description'>$desc</span>" : "";
 		break;
 		
 		case "multi-checkbox":
-			foreach($choices as $item) {
+			foreach( $choices as $item) {
 				
-				$item = explode("|",$item);
-				$item[0] = esc_html($item[0], 'blimply');
+				$item = explode("|",$item );
+				$item[0] = esc_html( $item[0], 'blimply' );
 				
 				$checked = '';
 				
-			    if ( isset($options[$id][$item[1]]) ) {
-					if ( $options[$id][$item[1]] == 'true') {
+			    if ( isset( $options[$id][$item[1]]) ) {
+					if ( $options[$id][$item[1]] == 'true' ) {
 			   			$checked = 'checked="checked"';
 					}
 				}
 				
 				echo "<input class='checkbox$field_class' type='checkbox' id='$id|$item[1]' name='" . $blimply_option_name . "[$id|$item[1]]' value='1' $checked /> $item[0] <br/>";
 			}
-			echo ($desc != '') ? "<br /><span class='description'>$desc</span>" : "";
+			echo ( $desc != '' ) ? "<br /><span class='description'>$desc</span>" : "";
 		break;
 	}
 }
@@ -268,13 +268,13 @@ function blimply_settings_page_fn() {
 		<form action="options.php" method="post">
 			<?php 
 			// http://codex.wordpress.org/Function_Reference/settings_fields
-			settings_fields($settings_output['blimply_option_name']); 
+			settings_fields( $settings_output['blimply_option_name']); 
 			// http://codex.wordpress.org/Function_Reference/do_settings_sections
 			do_settings_sections(__FILE__); 
 			?>
 			
 			<p class="submit">
-				<input name="Submit" type="submit" class="button-primary" value="<?php esc_attr_e('Save Changes','blimply'); ?>" />
+				<input name="Submit" type="submit" class="button-primary" value="<?php esc_attr_e( 'Save Changes','blimply' ); ?>" />
 			</p>
 			
 		</form>
@@ -286,7 +286,7 @@ function blimply_settings_page_fn() {
  * 
  * @return array
  */
-function blimply_validate_options($input) {
+function blimply_validate_options( $input ) {
 	
 	// for enhanced security, create a new empty array
 	$valid_input = array();
@@ -299,7 +299,7 @@ function blimply_validate_options($input) {
 		$options = $settings_output['blimply_page_fields'];
 		
 		// run a foreach and switch on option type
-		foreach ($options as $option) {
+		foreach ( $options as $option ) {
 		
 			switch ( $option['type'] ) {
 				case 'text':
@@ -308,15 +308,15 @@ function blimply_validate_options($input) {
 						//for numeric 
 						case 'numeric':
 							//accept the input only when numeric!
-							$input[$option['id']] 		= trim($input[$option['id']]); // trim whitespace
-							$valid_input[$option['id']] = (is_numeric($input[$option['id']])) ? $input[$option['id']] : 'Expecting a Numeric value!';
+							$input[$option['id']] 		= trim( $input[$option['id']] ); // trim whitespace
+							$valid_input[$option['id']] = (is_numeric( $input[$option['id']] ) ) ? $input[$option['id']] : 'Expecting a Numeric value!';
 							
 							// register error
-							if(is_numeric($input[$option['id']]) == FALSE) {
+							if(is_numeric( $input[$option['id']]) == FALSE) {
 								add_settings_error(
 									$option['id'], // setting title
 									BLIMPLY_PREFIX . '_txt_numeric_error', // error ID
-									__('Expecting a Numeric value! Please fix.','blimply'), // error message
+									__( 'Expecting a Numeric value! Please fix.','blimply' ), // error message
 									'error' // type of message
 								);
 							}
@@ -325,21 +325,21 @@ function blimply_validate_options($input) {
 						//for multi-numeric values (separated by a comma)
 						case 'multinumeric':
 							//accept the input only when the numeric values are comma separated
-							$input[$option['id']] 		= trim($input[$option['id']]); // trim whitespace
+							$input[$option['id']] 		= trim( $input[$option['id']]); // trim whitespace
 							
-							if($input[$option['id']] !=''){
+							if( $input[$option['id']] !='' ){
 								// /^-?\d+(?:,\s?-?\d+)*$/ matches: -1 | 1 | -12,-23 | 12,23 | -123, -234 | 123, 234  | etc.
-								$valid_input[$option['id']] = (preg_match('/^-?\d+(?:,\s?-?\d+)*$/', $input[$option['id']]) == 1) ? $input[$option['id']] : __('Expecting comma separated numeric values','blimply');
+								$valid_input[$option['id']] = (preg_match( '/^-?\d+(?:,\s?-?\d+)*$/', $input[$option['id']]) == 1) ? $input[$option['id']] : __( 'Expecting comma separated numeric values','blimply' );
 							}else{
 								$valid_input[$option['id']] = $input[$option['id']];
 							}
 							
 							// register error
-							if($input[$option['id']] !='' && preg_match('/^-?\d+(?:,\s?-?\d+)*$/', $input[$option['id']]) != 1) {
+							if( $input[$option['id']] !='' && preg_match( '/^-?\d+(?:,\s?-?\d+)*$/', $input[$option['id']]) != 1) {
 								add_settings_error(
 									$option['id'], // setting title
 									BLIMPLY_PREFIX . '_txt_multinumeric_error', // error ID
-									__('Expecting comma separated numeric values! Please fix.','blimply'), // error message
+									__( 'Expecting comma separated numeric values! Please fix.','blimply' ), // error message
 									'error' // type of message
 								);
 							}
@@ -348,33 +348,33 @@ function blimply_validate_options($input) {
 						//for no html
 						case 'nohtml':
 							//accept the input only after stripping out all html, extra white space etc!
-							$input[$option['id']] 		= sanitize_text_field($input[$option['id']]); // need to add slashes still before sending to the database
-							$valid_input[$option['id']] = addslashes($input[$option['id']]);
+							$input[$option['id']] 		= sanitize_text_field( $input[$option['id']]); // need to add slashes still before sending to the database
+							$valid_input[$option['id']] = addslashes( $input[$option['id']]);
 						break;
 						
 						//for url
 						case 'url':
 							//accept the input only when the url has been sanited for database usage with esc_url_raw()
-							$input[$option['id']] 		= trim($input[$option['id']]); // trim whitespace
-							$valid_input[$option['id']] = esc_url_raw($input[$option['id']]);
+							$input[$option['id']] 		= trim( $input[$option['id']]); // trim whitespace
+							$valid_input[$option['id']] = esc_url_raw( $input[$option['id']]);
 						break;
 						
 						//for email
 						case 'email':
 							//accept the input only after the email has been validated
-							$input[$option['id']] 		= trim($input[$option['id']]); // trim whitespace
-							if($input[$option['id']] != ''){
-								$valid_input[$option['id']] = (is_email($input[$option['id']])!== FALSE) ? $input[$option['id']] : __('Invalid email! Please re-enter!','blimply');
-							}elseif($input[$option['id']] == ''){
-								$valid_input[$option['id']] = __('This setting field cannot be empty! Please enter a valid email address.','blimply');
+							$input[$option['id']] 		= trim( $input[$option['id']]); // trim whitespace
+							if( $input[$option['id']] != '' ){
+								$valid_input[$option['id']] = (is_email( $input[$option['id']])!== FALSE) ? $input[$option['id']] : __( 'Invalid email! Please re-enter!','blimply' );
+							}elseif( $input[$option['id']] == '' ){
+								$valid_input[$option['id']] = __( 'This setting field cannot be empty! Please enter a valid email address.','blimply' );
 							}
 							
 							// register error
-							if(is_email($input[$option['id']])== FALSE || $input[$option['id']] == '') {
+							if(is_email( $input[$option['id']])== FALSE || $input[$option['id']] == '' ) {
 								add_settings_error(
 									$option['id'], // setting title
 									BLIMPLY_PREFIX . '_txt_email_error', // error ID
-									__('Please enter a valid email address.','blimply'), // error message
+									__( 'Please enter a valid email address.','blimply' ), // error message
 									'error' // type of message
 								);
 							}
@@ -384,53 +384,53 @@ function blimply_validate_options($input) {
 						default:
 							// accept only a few inline html elements
 							$allowed_html = array(
-								'a' => array('href' => array (),'title' => array ()),
+								'a' => array( 'href' => array (),'title' => array () ),
 								'b' => array(),
 								'em' => array (), 
 								'i' => array (),
 								'strong' => array()
 							);
 							
-							$input[$option['id']] 		= trim($input[$option['id']]); // trim whitespace
-							$input[$option['id']] 		= force_balance_tags($input[$option['id']]); // find incorrectly nested or missing closing tags and fix markup
+							$input[$option['id']] 		= trim( $input[$option['id']]); // trim whitespace
+							$input[$option['id']] 		= force_balance_tags( $input[$option['id']]); // find incorrectly nested or missing closing tags and fix markup
 							$input[$option['id']] 		= wp_kses( $input[$option['id']], $allowed_html); // need to add slashes still before sending to the database
-							$valid_input[$option['id']] = addslashes($input[$option['id']]); 
+							$valid_input[$option['id']] = addslashes( $input[$option['id']]); 
 						break;
 					}
 				break;
 				
 				case "multi-text":
 					// this will hold the text values as an array of 'key' => 'value'
-					unset($textarray);
+					unset( $textarray);
 					
 					$text_values = array();
-					foreach ($option['choices'] as $k => $v ) {
+					foreach ( $option['choices'] as $k => $v ) {
 						// explode the connective
 						$pieces = explode("|", $v);
 						
 						$text_values[] = $pieces[1];
 					}
 					
-					foreach ($text_values as $v ) {		
+					foreach ( $text_values as $v ) {		
 						
 						// Check that the option isn't empty
-						if (!empty($input[$option['id'] . '|' . $v])) {
+						if (!empty( $input[$option['id'] . '|' . $v]) ) {
 							// If it's not null, make sure it's sanitized, add it to an array
-							switch ($option['class']) {
+							switch ( $option['class']) {
 								// different sanitation actions based on the class create you own cases as you need them
 								
 								//for numeric input
 								case 'numeric':
 									//accept the input only if is numberic!
-									$input[$option['id'] . '|' . $v]= trim($input[$option['id'] . '|' . $v]); // trim whitespace
-									$input[$option['id'] . '|' . $v]= (is_numeric($input[$option['id'] . '|' . $v])) ? $input[$option['id'] . '|' . $v] : '';
+									$input[$option['id'] . '|' . $v]= trim( $input[$option['id'] . '|' . $v]); // trim whitespace
+									$input[$option['id'] . '|' . $v]= (is_numeric( $input[$option['id'] . '|' . $v]) ) ? $input[$option['id'] . '|' . $v] : '';
 								break;
 								
 								// a "cover-all" fall-back when the class argument is not set
 								default:
 									// strip all html tags and white-space.
-									$input[$option['id'] . '|' . $v]= sanitize_text_field($input[$option['id'] . '|' . $v]); // need to add slashes still before sending to the database
-									$input[$option['id'] . '|' . $v]= addslashes($input[$option['id'] . '|' . $v]);
+									$input[$option['id'] . '|' . $v]= sanitize_text_field( $input[$option['id'] . '|' . $v]); // need to add slashes still before sending to the database
+									$input[$option['id'] . '|' . $v]= addslashes( $input[$option['id'] . '|' . $v]);
 								break;
 							}
 							// pass the sanitized user input to our $textarray array
@@ -441,7 +441,7 @@ function blimply_validate_options($input) {
 						}
 					}
 					// pass the non-empty $textarray to our $valid_input array
-					if (!empty($textarray)) {
+					if (!empty( $textarray) ) {
 						$valid_input[$option['id']] = $textarray;
 					}
 				break;
@@ -452,33 +452,33 @@ function blimply_validate_options($input) {
 						//for only inline html
 						case 'inlinehtml':
 							// accept only inline html
-							$input[$option['id']] 		= trim($input[$option['id']]); // trim whitespace
-							$input[$option['id']] 		= force_balance_tags($input[$option['id']]); // find incorrectly nested or missing closing tags and fix markup
-							$input[$option['id']] 		= addslashes($input[$option['id']]); //wp_filter_kses expects content to be escaped!
-							$valid_input[$option['id']] = wp_filter_kses($input[$option['id']]); //calls stripslashes then addslashes
+							$input[$option['id']] 		= trim( $input[$option['id']]); // trim whitespace
+							$input[$option['id']] 		= force_balance_tags( $input[$option['id']]); // find incorrectly nested or missing closing tags and fix markup
+							$input[$option['id']] 		= addslashes( $input[$option['id']]); //wp_filter_kses expects content to be escaped!
+							$valid_input[$option['id']] = wp_filter_kses( $input[$option['id']]); //calls stripslashes then addslashes
 						break;
 						
 						//for no html
 						case 'nohtml':
 							//accept the input only after stripping out all html, extra white space etc!
-							$input[$option['id']] 		= sanitize_text_field($input[$option['id']]); // need to add slashes still before sending to the database
-							$valid_input[$option['id']] = addslashes($input[$option['id']]);
+							$input[$option['id']] 		= sanitize_text_field( $input[$option['id']]); // need to add slashes still before sending to the database
+							$valid_input[$option['id']] = addslashes( $input[$option['id']]);
 						break;
 						
 						//for allowlinebreaks
 						case 'allowlinebreaks':
 							//accept the input only after stripping out all html, extra white space etc!
-							$input[$option['id']] 		= wp_strip_all_tags($input[$option['id']]); // need to add slashes still before sending to the database
-							$valid_input[$option['id']] = addslashes($input[$option['id']]);
+							$input[$option['id']] 		= wp_strip_all_tags( $input[$option['id']]); // need to add slashes still before sending to the database
+							$valid_input[$option['id']] = addslashes( $input[$option['id']]);
 						break;						
 						// a "cover-all" fall-back when the class argument is not set
 						default:
 							// accept only limited html
 							//my allowed html
 							$allowed_html = array(
-								'a' 			=> array('href' => array (),'title' => array ()),
+								'a' 			=> array( 'href' => array (),'title' => array () ),
 								'b' 			=> array(),
-								'blockquote' 	=> array('cite' => array ()),
+								'blockquote' 	=> array( 'cite' => array () ),
 								'br' 			=> array(),
 								'dd' 			=> array(),
 								'dl' 			=> array(),
@@ -488,34 +488,34 @@ function blimply_validate_options($input) {
 								'li' 			=> array(),
 								'ol' 			=> array(),
 								'p' 			=> array(),
-								'q' 			=> array('cite' => array ()),
+								'q' 			=> array( 'cite' => array () ),
 								'strong' 		=> array(),
 								'ul' 			=> array(),
-								'h1' 			=> array('align' => array (),'class' => array (),'id' => array (), 'style' => array ()),
-								'h2' 			=> array('align' => array (),'class' => array (),'id' => array (), 'style' => array ()),
-								'h3' 			=> array('align' => array (),'class' => array (),'id' => array (), 'style' => array ()),
-								'h4' 			=> array('align' => array (),'class' => array (),'id' => array (), 'style' => array ()),
-								'h5' 			=> array('align' => array (),'class' => array (),'id' => array (), 'style' => array ()),
-								'h6' 			=> array('align' => array (),'class' => array (),'id' => array (), 'style' => array ())
+								'h1' 			=> array( 'align' => array (),'class' => array (),'id' => array (), 'style' => array () ),
+								'h2' 			=> array( 'align' => array (),'class' => array (),'id' => array (), 'style' => array () ),
+								'h3' 			=> array( 'align' => array (),'class' => array (),'id' => array (), 'style' => array () ),
+								'h4' 			=> array( 'align' => array (),'class' => array (),'id' => array (), 'style' => array () ),
+								'h5' 			=> array( 'align' => array (),'class' => array (),'id' => array (), 'style' => array () ),
+								'h6' 			=> array( 'align' => array (),'class' => array (),'id' => array (), 'style' => array () )
 							);
 							
-							$input[$option['id']] 		= trim($input[$option['id']]); // trim whitespace
-							$input[$option['id']] 		= force_balance_tags($input[$option['id']]); // find incorrectly nested or missing closing tags and fix markup
+							$input[$option['id']] 		= trim( $input[$option['id']]); // trim whitespace
+							$input[$option['id']] 		= force_balance_tags( $input[$option['id']]); // find incorrectly nested or missing closing tags and fix markup
 							$input[$option['id']] 		= wp_kses( $input[$option['id']], $allowed_html); // need to add slashes still before sending to the database
-							$valid_input[$option['id']] = addslashes($input[$option['id']]);							
+							$valid_input[$option['id']] = addslashes( $input[$option['id']]);							
 						break;
 					}
 				break;
 				
 				case 'select':
 					// check to see if the selected value is in our approved array of values!
-					$valid_input[$option['id']] = (in_array( $input[$option['id']], $option['choices']) ? $input[$option['id']] : '' );
+					$valid_input[$option['id']] = ( in_array( $input[$option['id']], $option['choices']) ? $input[$option['id']] : '' );
 				break;
 				
 				case 'select2':
 					// process $select_values
 						$select_values = array();
-						foreach ($option['choices'] as $k => $v) {
+						foreach ( $option['choices'] as $k => $v) {
 							// explode the connective
 							$pieces = explode("|", $v);
 							
@@ -527,7 +527,7 @@ function blimply_validate_options($input) {
 				
 				case 'checkbox':
 					// if it's not set, default to null!
-					if (!isset($input[$option['id']])) {
+					if (!isset( $input[$option['id']]) ) {
 						$input[$option['id']] = null;
 					}
 					// Our checkbox value is either 0 or 1
@@ -535,19 +535,19 @@ function blimply_validate_options($input) {
 				break;
 				
 				case 'multi-checkbox':
-					unset($checkboxarray);
+					unset( $checkboxarray );
 					$check_values = array();
-					foreach ($option['choices'] as $k => $v ) {
+					foreach ( $option['choices'] as $k => $v ) {
 						// explode the connective
 						$pieces = explode("|", $v);
 						
 						$check_values[] = $pieces[1];
 					}
 					
-					foreach ($check_values as $v ) {		
+					foreach ( $check_values as $v ) {		
 						
 						// Check that the option isn't null
-						if (!empty($input[$option['id'] . '|' . $v])) {
+						if (!empty( $input[$option['id'] . '|' . $v]) ) {
 							// If it's not null, make sure it's true, add it to an array
 							$checkboxarray[$v] = 'true';
 						}
@@ -556,7 +556,7 @@ function blimply_validate_options($input) {
 						}
 					}
 					// Take all the items that were checked, and set them as the main option
-					if (!empty($checkboxarray)) {
+					if ( !empty( $checkboxarray ) ) {
 						$valid_input[$option['id']] = $checkboxarray;
 					}
 				break;
@@ -574,7 +574,7 @@ return $valid_input; // return validated input
  * @param (string) $msgclass The message class
  * @return echoes the message
  */
-function blimply_show_msg($message, $msgclass = 'info') {
+function blimply_show_msg( $message, $msgclass = 'info' ) {
 	echo "<div id='message' class='$msgclass'>$message</div>";
 }
 
@@ -586,28 +586,28 @@ function blimply_show_msg($message, $msgclass = 'info') {
 function blimply_admin_msgs() {
 	
 	// check for our settings page - need this in conditional further down
-	$blimply_settings_pg = strpos($_GET['page'], BLIMPLY_PAGE_BASENAME);
+	$blimply_settings_pg = strpos( $_GET['page'], BLIMPLY_PAGE_BASENAME );
 	// collect setting errors/notices: //http://codex.wordpress.org/Function_Reference/get_settings_errors
 	$set_errors = get_settings_errors(); 
 	
 	//display admin message only for the admin to see, only on our settings page and only when setting errors/notices are returned!	
-	if(current_user_can ('manage_options') && $blimply_settings_pg !== FALSE && !empty($set_errors)){
+	if(current_user_can ( 'manage_options' ) && $blimply_settings_pg !== FALSE && !empty( $set_errors ) ){
 
 		// have our settings succesfully been updated? 
-		if($set_errors[0]['code'] == 'settings_updated' && isset($_GET['settings-updated'])){
-			blimply_show_msg("<p>" . $set_errors[0]['message'] . "</p>", 'updated');
+		if( $set_errors[0]['code'] == 'settings_updated' && isset( $_GET['settings-updated'] ) ){
+			blimply_show_msg("<p>" . $set_errors[0]['message'] . "</p>", 'updated' );
 		
 		// have errors been found?
 		}else{
 			// there maybe more than one so run a foreach loop.
-			foreach($set_errors as $set_error){
+			foreach( $set_errors as $set_error){
 				// set the title attribute to match the error "setting title" - need this in js file
-				blimply_show_msg("<p class='setting-error-message' title='" . $set_error['setting'] . "'>" . $set_error['message'] . "</p>", 'error');
+				blimply_show_msg( "<p class='setting-error-message' title='" . $set_error['setting'] . "'>" . $set_error['message'] . "</p>", 'error' );
 			}
 		}
 	}
 }
 
 // admin messages hook!
-add_action('admin_notices', 'blimply_admin_msgs');
+add_action( 'admin_notices', 'blimply_admin_msgs' );
 ?>
