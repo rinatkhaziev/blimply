@@ -58,8 +58,7 @@ class Blimply {
 	*/
 	function action_admin_init() {
 		// @todo init only on post edit screens and in dashboard
-		$this->options = get_option( 'blimply_options' );
-		$this->tags = get_option( 'blimply_tags' );
+		$this->options = get_option( 'blimply_options' );		
 		$this->airships[ $this->options['blimply_name'] ] = new Airship( $this->options['blimply_app_key'], $this->options['blimply_app_secret'] );
 		// Pass the reference to convenience var
 		// We don't use multiple Airships yet.
@@ -71,8 +70,9 @@ class Blimply {
 				'singular_name' => __( 'Urban Airship Tags', 'blimply' ),
 			),
 			'show_in_nav_menus' => false,
-			'show_ui' => true
+			'show_ui' => false
 			) );
+		$this->tags = get_terms( 'blimply_tags', array( 'hide_empty' => 0 ) );
 	}	
 	
 	/**
@@ -93,9 +93,9 @@ class Blimply {
 			} catch ( Exception $e ) {
 				// @todo do something with exception
 			}
-			if ($response[0] == 200 ) {
+			if ( isset( $response[0] ) && $response[0] == 201 ) {
 				// @todo process ok result
-			}
+			} 
 		}		
 	}
 	
@@ -111,6 +111,7 @@ class Blimply {
       		return;
 
       	if ( 1 == $_POST['blimply_push'] ) {
+			// @todo implement sending to tags if any specified
 			$alert = !empty( $_POST['blimply_push_alert'] ) ? esc_attr( $_POST['blimply_push_alert'] ) : esc_attr( $_POST['post_title'] );
       		$broadcast_message = array( 'aps' => array( 'alert' => '' . $alert, 'badge' => '+1' ) );
       		$this->request( $this->airship, 'broadcast', $broadcast_message  );
@@ -127,7 +128,6 @@ class Blimply {
 		$post_types = get_post_types( array( 'public' => true ), 'objects' );
 		foreach ( $post_types as $post_type => $props )
 			add_meta_box( BLIMPLY_PREFIX, __( 'Push Notification', 'blimply' ), array( $this, 'post_meta_box' ), $post_type, 'side' );		
-
 	}
 
 	/**
@@ -145,9 +145,18 @@ class Blimply {
 			echo '<br/><label for="blimply_push_alert">';
 		    	_e( 'Push message', 'blimply' );
 			echo '</label><br/> ';
-			echo '<textarea id="blimply_push_alert" name="blimply_push_alert">' . $post->post_title . '</textarea>';	
+			echo '<textarea id="blimply_push_alert" name="blimply_push_alert">' . $post->post_title . '</textarea><br/>';
+			echo '<strong>' . __( 'Send Push to following Urban Airship tags', 'blimply' ) . '</strong><br/>';
+			foreach ( $this->tags as $tag ) {
+				echo '<input type="checkbox" name="blimply_push_tag[]" id="blimply_tag_' .$tag->term_id . '" />';
+				echo '<label class="selectit" for="blimply_tag_' .$tag->term_id . '">';
+				echo $tag->name;
+				echo '</label><br/>';				
+			}
+			
+			
 		} else {
-				_e( 'Push notification is already sent', 'blimply' );
+			_e( 'Push notification is already sent', 'blimply' );
 		}
 	}
 		
