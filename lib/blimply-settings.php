@@ -106,12 +106,12 @@ function blimply_register_settings(){
  * Group scripts (js & css)
  */
 function blimply_settings_scripts(){
-//	wp_enqueue_style( 'blimply_theme_settings_css', get_template_directory_uri() . '/lib/css/blimply_theme_settings.css' );
-//	wp_enqueue_script( 'blimply_theme_settings_js', get_template_directory_uri() . '/lib/js/blimply_theme_settings.js', array( 'jquery' ) );
 }
 
 /**
  * The Admin menu page
+ *
+ * @todo may be refactor
  */
 function blimply_add_menu(){
 
@@ -120,14 +120,16 @@ function blimply_add_menu(){
 	$blimply_contextual_help = $settings_output['blimply_contextual_help'];
 	
 	// Display Settings Page link under the "Appearance" Admin Menu
-	// add_theme_page( $page_title, $menu_title, $capability, $menu_slug, $function);
 	$blimply_settings_page = add_options_page( __( 'Blimply Options' ), __( 'Blimply Options','blimply' ), 'manage_options', BLIMPLY_PAGE_BASENAME, 'blimply_settings_page_fn' );
 		// contextual help
-		if ( $blimply_settings_page ) {
-			add_contextual_help( $blimply_settings_page, $blimply_contextual_help );
-		}
-		// css & js
-		add_action( 'load-'. $blimply_settings_page, 'blimply_settings_scripts' );	
+	if ( $blimply_settings_page ) {
+		add_contextual_help( $blimply_settings_page, $blimply_contextual_help );
+	}
+	
+	// We register the taxonomy in main plugin class
+	add_options_page( __( 'Blimply Tags' ), __( 'Blimply Tags','blimply' ), 'manage_options', 'edit-tags.php?taxonomy=blimply_tags' );	
+	// css & js
+	add_action( 'load-'. $blimply_settings_page, 'blimply_settings_scripts' );	
 }
 
 // ************************************************************************************************************
@@ -138,8 +140,8 @@ function blimply_add_menu(){
  * Section HTML, displayed before the first option
  * @return echoes output
  */
-function  blimply_section_fn( $desc) {
-	echo "<p>" . __( 'Settings for this section','blimply' ) . "</p>";
+function  blimply_section_fn( $desc ) {
+	echo "<p>" . __( $desc,'blimply' ) . "</p>";
 }
 
 /*

@@ -46,6 +46,8 @@ class Blimply {
 		add_action( 'save_post', array( $this, 'action_save_post' ) );
 		add_action( 'add_meta_boxes', array( $this, 'post_meta_boxes' ) );
 		add_action( 'update_option_blimply_options', array( $this, 'sync_airship_tags' ), 5, 2 );
+		add_action( 'register_taxonomy', array( $this, 'after_register_taxonomy' ), 5, 3  );
+		add_action( 'create_term', array( $this, 'action_create_term' ), 5, 3 );
 	}
 	
 
@@ -62,26 +64,39 @@ class Blimply {
 		// Pass the reference to convenience var
 		// We don't use multiple Airships yet.
 		$this->airship = &$this->airships[ $this->options['blimply_name'] ];
-	}
+		register_taxonomy( 'blimply_tags', array( 'post' ), array(
+			'public' => false,
+			'labels' => array(
+				'name' => __( 'Urban Airship Tags', 'blimply' ),
+				'singular_name' => __( 'Urban Airship Tags', 'blimply' ),
+			),
+			'show_in_nav_menus' => false,
+			'show_ui' => true
+			) );
+	}	
 	
-	function sync_airship_tags( $old, $new ) {
-		
-		if ( $new['blimply_tags'] != $old['blimply_tags'] ) {
-			$tags = explode( ',', $new['blimply_tags'] );
-		}
-			$tags = explode( ',', $this->options['blimply_tags'] );
-			$tags_slugs = array();
-			foreach ( $tags as $tag ) {
-				$tag_slug = sanitize_title_with_dashes( $tag );
-				try {
-					$response = $this->airship->_request( BASE_URL . "/tags/{$tag_slug}", 'PUT', null );
-				} catch ( Exception $e ) {
-					
-				}
-				if ($response[0] == 200 )
-					$tags_slugs[$tag_slug] = $tag;
+	/**
+	 * Sync our newly created tag with Urban Airship
+	 *
+	 *	@param int $term_id term_id
+	 *	@param int $tt_id term_taxonomy_id
+	 *	@param string $taxonomy
+	 */
+	function action_create_term( $term_id, $tt_id, $taxonomy ) {
+		if ( 'blimply_tags' != $taxonomy )
+			return;
+		$tag = get_term( $term_id, $taxonomy );
+		// Let's sync
+		if ( ! is_wp_error( $tag ) ) { 
+			try {
+				$response = $this->airship->_request( BASE_URL . "/tags/{$tag->slug}", 'PUT', null );
+			} catch ( Exception $e ) {
+				// @todo do something with exception
 			}
-			update_option( 'blimply_tags', $tags_slugs );
+			if ($response[0] == 200 ) {
+				// @todo process ok result
+			}
+		}		
 	}
 	
 	/**
