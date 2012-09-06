@@ -34,8 +34,9 @@ define( 'BLIMPLY_PREFIX' , 'blimply' );
 // Bootstrap
 // Silently try to include PEAR_Info to check if dependency package for Urban Airship API is installed
 @include_once 'PEAR/Info.php';
-if (  ! class_exists( 'PEAR_Info' ) || ! PEAR_Info::packageInstalled( 'HTTP_Request' ) ) {
-	// @todo implement graceful deactivation may be? 
+if (  ! class_exists( 'PEAR_Info' ) || ! PEAR_Info::packageInstalled( 'HTTP_Request2' ) ) {
+	// Include admin error notice that informs that the plugin won't be functional
+	require_once( BLIMPLY_ROOT . '/lib/blimply-no-http-request.php' );
 	return;
 }
 require_once( BLIMPLY_ROOT . '/lib/urban-airship/urbanairship.php' );
