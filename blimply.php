@@ -2,7 +2,7 @@
 /*
 Plugin Name: Blimply
 Plugin URI: http://doejo.com
-Description: Blimply is a simple plugin that will allow you to send push notifications to your mobile users utilizing Urban Airship API. 
+Description: Blimply allows you to send push notifications to your mobile users utilizing Urban Airship API. 
 Author: Rinat Khaziev, doejo
 Version: 0.1
 Author URI: http://doejo.com
@@ -32,6 +32,12 @@ define( 'BLIMPLY_URL' , plugins_url( '/', __FILE__ ) );
 define( 'BLIMPLY_PREFIX' , 'blimply' );
 
 // Bootstrap
+// Silently try to include PEAR_Info to check if dependency package for Urban Airship API is installed
+@include_once 'PEAR/Info.php';
+if (  ! class_exists( 'PEAR_Info' ) || ! PEAR_Info::packageInstalled( 'HTTP_Request' ) ) {
+	// @todo implement graceful deactivation may be? 
+	return;
+}
 require_once( BLIMPLY_ROOT . '/lib/urban-airship/urbanairship.php' );
 require_once( BLIMPLY_ROOT . '/lib/blimply-settings.php' );
 
