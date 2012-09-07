@@ -58,6 +58,13 @@ class Blimply {
 		add_action( 'register_taxonomy', array( $this, 'after_register_taxonomy' ), 5, 3 );
 		add_action( 'create_term', array( $this, 'action_create_term' ), 5, 3 );
 		add_action( 'init', array( $this, 'l10n' ) );
+		add_action( 'wp_dashboard_setup', array( $this, 'dashboard_setup' ) );
+		add_action( 'admin_enqueue_scripts', array( $this, 'register_scripts_and_styles' ) );
+	}
+	
+	function dashboard_setup() {
+	if ( is_blog_admin() && current_user_can('edit_posts') )
+		wp_add_dashboard_widget( 'dashboard_blimply', __( 'Send a Push notification' ), array( $this, 'dashboard_widget' ) );		
 	}
 	
 	function l10n() {
@@ -85,6 +92,20 @@ class Blimply {
 			'show_ui' => false
 			) );
 		$this->tags = get_terms( 'blimply_tags', array( 'hide_empty' => 0 ) );
+	}
+	
+	/**
+	 * Register scripts and styles
+	 *
+	 */
+	function register_scripts_and_styles() {
+		global $pagenow;
+		echo $pagenow;
+		// Only load this on the proper page
+		if ( ! in_array( $pagenow, array( 'post-new.php', 'post.php' ) ) )
+			return;
+		wp_enqueue_style( 'blimply-style', BLIMPLY_URL . '/lib/css/blimply.css' );
+		wp_enqueue_script( 'blimply-js', BLIMPLY_URL . '/lib/js/blimply.js', array( 'jquery' )  );
 	}	
 	
 	/**
@@ -148,24 +169,25 @@ class Blimply {
 	function post_meta_box( $post ) {
 		$is_push_sent = get_post_meta( $post->ID, 'blimply_push_sent', true );
 		if ( 1 != $is_push_sent ) {
+			echo '<div class="blimply-wrapper">';
 			wp_nonce_field( BLIMPLY_FILE_PATH, 'blimply_nonce' );
-			echo '<label for="blimply_push">';
-		    	_e( 'Send push notification', 'blimply' );
-			echo '</label> ';
-			echo '<input type="hidden" id="blimply_push" name="blimply_push" value="0" />';
-			echo '<input type="checkbox" id="blimply_push" name="blimply_push" value="1" />';
-			echo '<br/><label for="blimply_push_alert">';
+			echo '<label for="blimply_push_alert">';
 		    	_e( 'Push message', 'blimply' );
 			echo '</label><br/> ';
-			echo '<textarea id="blimply_push_alert" name="blimply_push_alert">' . $post->post_title . '</textarea><br/>';
-			echo '<strong>' . __( 'Send Push to following Urban Airship tags', 'blimply' ) . '</strong><br/>';
+			echo '<textarea id="blimply_push_alert" name="blimply_push_alert" class="bl_textarea">' . $post->post_title . '</textarea><br/>';
+			echo '<strong>' . __( 'Send Push to following Urban Airship tags', 'blimply' ) . '</strong>';
 			foreach ( $this->tags as $tag ) {
-				echo '<input type="checkbox" name="blimply_push_tag[]" id="blimply_tag_' .$tag->term_id . '" />';
-				echo '<label class="selectit" for="blimply_tag_' .$tag->term_id . '">';
+				echo '<input type="radio" name="blimply_push_tag" id="blimply_tag_' .$tag->term_id . '" />';
+				echo '<label class="selectit" for="blimply_tag_' .$tag->term_id . '" style="margin-left: 4px">';
 				echo $tag->name;
 				echo '</label><br/>';				
 			}
-			
+			echo '<br/><input type="hidden" id="" name="blimply_push" value="0" />';
+			echo '<input type="checkbox" id="blimply_push" name="blimply_push" value="1" disabled="disabled" />';			
+			echo '<label for="blimply_push">';
+		    	_e( 'Check to confirm sending', 'blimply' );
+			echo '</label> ';			
+			echo '</div>';
 			
 		} else {
 			_e( 'Push notification is already sent', 'blimply' );
@@ -198,6 +220,99 @@ class Blimply {
 			// @todo illegal request
 		}
 	}
+	
+	function dashboard_widget() {
+		global $post_ID;
+	
+		$drafts = false;
+		if ( 'post' === strtolower( $_SERVER['REQUEST_METHOD'] ) && isset( $_POST['action'] ) && 0 === strpos( $_POST['action'], 'post-quickpress' ) && (int) $_POST['post_ID'] ) {
+			$view = get_permalink( $_POST['post_ID'] );
+			$edit = esc_url( get_edit_post_link( $_POST['post_ID'] ) );
+			if ( 'post-quickpress-publish' == $_POST['action'] ) {
+				if ( current_user_can('publish_posts') )
+					printf( '<div class="updated"><p>' . __( 'Post published. <a href="%s">View post</a> | <a href="%s">Edit post</a>' ) . '</p></div>', esc_url( $view ), $edit );
+				else
+					printf( '<div class="updated"><p>' . __( 'Post submitted. <a href="%s">Preview post</a> | <a href="%s">Edit post</a>' ) . '</p></div>', esc_url( add_query_arg( 'preview', 1, $view ) ), $edit );
+			} else {
+				printf( '<div class="updated"><p>' . __( 'Draft saved. <a href="%s">Preview post</a> | <a href="%s">Edit post</a>' ) . '</p></div>', esc_url( add_query_arg( 'preview', 1, $view ) ), $edit );
+				$drafts_query = new WP_Query( array(
+					'post_type' => 'post',
+					'post_status' => 'draft',
+					'author' => $GLOBALS['current_user']->ID,
+					'posts_per_page' => 1,
+					'orderby' => 'modified',
+					'order' => 'DESC'
+				) );
+	
+				if ( $drafts_query->posts )
+					$drafts =& $drafts_query->posts;
+			}
+			printf('<p class="textright">' . __('You can also try %s, easy blogging from anywhere on the Web.') . '</p>', '<a href="' . esc_url( admin_url( 'tools.php' ) ) . '">' . __('Press This') . '</a>' );
+			$_REQUEST = array(); // hack for get_default_post_to_edit()
+		}
+	
+		/* Check if a new auto-draft (= no new post_ID) is needed or if the old can be used */
+		$last_post_id = (int) get_user_option( 'dashboard_quick_press_last_post_id' ); // Get the last post_ID
+		if ( $last_post_id ) {
+			$post = get_post( $last_post_id );
+			if ( empty( $post ) || $post->post_status != 'auto-draft' ) { // auto-draft doesn't exists anymore
+				$post = get_default_post_to_edit('post', true);
+				update_user_option( (int) $GLOBALS['current_user']->ID, 'dashboard_quick_press_last_post_id', (int) $post->ID ); // Save post_ID
+			} else {
+				$post->post_title = ''; // Remove the auto draft title
+			}
+		} else {
+			$post = get_default_post_to_edit('post', true);
+			update_user_option( (int) $GLOBALS['current_user']->ID, 'dashboard_quick_press_last_post_id', (int) $post->ID ); // Save post_ID
+		}
+	
+		$post_ID = (int) $post->ID;
+	?>
+	
+		<form name="post" action="<?php echo esc_url( admin_url( 'post.php' ) ); ?>" method="post" id="quick-press">
+			<h4 id="quick-post-title"><label for="title"><?php _e('Title') ?></label></h4>
+			<div class="input-text-wrap">
+				<input type="text" name="post_title" id="title" tabindex="1" autocomplete="off" value="<?php echo esc_attr( $post->post_title ); ?>" />
+			</div>
+	
+			<?php if ( current_user_can( 'upload_files' ) ) : ?>
+			<div id="wp-content-wrap" class="wp-editor-wrap hide-if-no-js wp-media-buttons">
+				<?php do_action( 'media_buttons', 'content' ); ?>
+			</div>
+			<?php endif; ?>
+	
+			<h4 id="content-label"><label for="content"><?php _e('Content') ?></label></h4>
+			<div class="textarea-wrap">
+				<textarea name="content" id="content" class="mceEditor" rows="3" cols="15" tabindex="2"><?php echo esc_textarea( $post->post_content ); ?></textarea>
+			</div>
+	
+			<script type="text/javascript">edCanvas = document.getElementById('content');edInsertContent = null;</script>
+	
+			<h4><label for="tags-input"><?php _e('Tags') ?></label></h4>
+			<div class="input-text-wrap">
+				<input type="text" name="tags_input" id="tags-input" tabindex="3" value="<?php echo get_tags_to_edit( $post->ID ); ?>" />
+			</div>
+	
+			<p class="submit">
+				<input type="hidden" name="action" id="quickpost-action" value="post-quickpress-save" />
+				<input type="hidden" name="post_ID" value="<?php echo $post_ID; ?>" />
+				<input type="hidden" name="post_type" value="post" />
+				<?php wp_nonce_field('add-post'); ?>
+				<?php submit_button( __( 'Save Draft' ), 'button', 'save', false, array( 'id' => 'save-post', 'tabindex'=> 4 ) ); ?>
+				<input type="reset" value="<?php esc_attr_e( 'Reset' ); ?>" class="button" />
+				<span id="publishing-action">
+					<input type="submit" name="publish" id="publish" accesskey="p" tabindex="5" class="button-primary" value="<?php current_user_can('publish_posts') ? esc_attr_e('Publish') : esc_attr_e('Submit for Review'); ?>" />
+					<img class="waiting" src="<?php echo esc_url( admin_url( 'images/wpspin_light.gif' ) ); ?>" alt="" />
+				</span>
+				<br class="clear" />
+			</p>
+	
+		</form>
+	
+	<?php
+		if ( $drafts )
+			wp_dashboard_recent_drafts( $drafts );
+		}
 	
 }
 

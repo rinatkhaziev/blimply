@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: blimply\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-09-06 17:25-0600\n"
-"PO-Revision-Date: 2012-09-07 11:55-0600\n"
+"POT-Creation-Date: 2012-09-07 15:36-0600\n"
+"PO-Revision-Date: 2012-09-07 15:36-0600\n"
 "Last-Translator: \n"
 "Language-Team: doejo\n"
 "Language: en_EN\n"
@@ -14,28 +14,77 @@ msgstr ""
 "X-Poedit-Basepath: .\n"
 "X-Poedit-SearchPath-0: ../..\n"
 
-#: ../../blimply.php:79 ../../blimply.php:80
+#: ../../blimply.php:67
+msgid "Send a Push notification"
+msgstr ""
+
+#: ../../blimply.php:88 ../../blimply.php:89
+#: ../../lib/blimply-settings.php:130
 msgid "Urban Airship Tags"
 msgstr ""
 
-#: ../../blimply.php:140
+#: ../../blimply.php:163
 msgid "Push Notification"
 msgstr ""
 
-#: ../../blimply.php:151
-msgid "Send push notification"
-msgstr ""
-
-#: ../../blimply.php:156
+#: ../../blimply.php:175
 msgid "Push message"
 msgstr ""
 
-#: ../../blimply.php:159
+#: ../../blimply.php:178
 msgid "Send Push to following Urban Airship tags"
 msgstr ""
 
-#: ../../blimply.php:169
+#: ../../blimply.php:188
+msgid "Send it"
+msgstr ""
+
+#: ../../blimply.php:193
 msgid "Push notification is already sent"
+msgstr ""
+
+#: ../../blimply.php:233
+#, php-format
+msgid ""
+"Post published. <a href=\"%s\">View post</a> | <a href=\"%s\">Edit post</a>"
+msgstr ""
+
+#: ../../blimply.php:235
+#, php-format
+msgid ""
+"Post submitted. <a href=\"%s\">Preview post</a> | <a href=\"%s\">Edit post</"
+"a>"
+msgstr ""
+
+#: ../../blimply.php:237
+#, php-format
+msgid ""
+"Draft saved. <a href=\"%s\">Preview post</a> | <a href=\"%s\">Edit post</a>"
+msgstr ""
+
+#: ../../blimply.php:250
+#, php-format
+msgid "You can also try %s, easy blogging from anywhere on the Web."
+msgstr ""
+
+#: ../../blimply.php:250
+msgid "Press This"
+msgstr ""
+
+#: ../../blimply.php:273
+msgid "Title"
+msgstr ""
+
+#: ../../blimply.php:284
+msgid "Content"
+msgstr ""
+
+#: ../../blimply.php:291
+msgid "Tags"
+msgstr ""
+
+#: ../../blimply.php:301
+msgid "Save Draft"
 msgstr ""
 
 #: ../../lib/blimply-options.php:11
@@ -85,10 +134,6 @@ msgstr ""
 
 #: ../../lib/blimply-settings.php:123
 msgid "Blimply Options"
-msgstr ""
-
-#: ../../lib/blimply-settings.php:130
-msgid "Blimply Tags"
 msgstr ""
 
 #: ../../lib/blimply-settings.php:321
