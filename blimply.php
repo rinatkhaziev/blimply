@@ -32,8 +32,10 @@ define( 'BLIMPLY_URL' , plugins_url( '/', __FILE__ ) );
 define( 'BLIMPLY_PREFIX' , 'blimply' );
 
 // Bootstrap
-// Silently try to include PEAR_Info to check if dependency package for Urban Airship API is installed
-@include_once 'PEAR/Info.php';
+// Try to include PEAR_Info to check if dependency package for Urban Airship API is installed
+// This is a workaround to prevent possible Fatal error in urbanairhship.php due to missing required file
+include_once 'PEAR/Info.php';
+
 if (  ! class_exists( 'PEAR_Info' ) || ! PEAR_Info::packageInstalled( 'HTTP_Request' ) ) {
 	// Include admin error notice that informs that the plugin won't be functional
 	require_once( BLIMPLY_ROOT . '/lib/blimply-no-http-request.php' );
@@ -53,7 +55,7 @@ class Blimply {
 		add_action( 'save_post', array( $this, 'action_save_post' ) );
 		add_action( 'add_meta_boxes', array( $this, 'post_meta_boxes' ) );
 		add_action( 'update_option_blimply_options', array( $this, 'sync_airship_tags' ), 5, 2 );
-		add_action( 'register_taxonomy', array( $this, 'after_register_taxonomy' ), 5, 3  );
+		add_action( 'register_taxonomy', array( $this, 'after_register_taxonomy' ), 5, 3 );
 		add_action( 'create_term', array( $this, 'action_create_term' ), 5, 3 );
 		add_action( 'init', array( $this, 'l10n' ) );
 	}

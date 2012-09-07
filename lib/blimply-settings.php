@@ -127,7 +127,7 @@ function blimply_add_menu(){
 	}
 	
 	// We register the taxonomy in main plugin class
-	add_options_page( __( 'Blimply Tags' ), __( 'Blimply Tags','blimply' ), 'manage_options', 'edit-tags.php?taxonomy=blimply_tags' );	
+	add_options_page( __( 'Urban Airship Tags' ), __( 'Urban Airship Tags','blimply' ), 'manage_options', 'edit-tags.php?taxonomy=blimply_tags' );	
 	// css & js
 	add_action( 'load-'. $blimply_settings_page, 'blimply_settings_scripts' );	
 }
