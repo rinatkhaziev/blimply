@@ -177,11 +177,17 @@ class Blimply {
 			echo '<textarea id="blimply_push_alert" name="blimply_push_alert" class="bl_textarea">' . $post->post_title . '</textarea><br/>';
 			echo '<strong>' . __( 'Send Push to following Urban Airship tags', 'blimply' ) . '</strong>';
 			foreach ( $this->tags as $tag ) {
-				echo '<input type="radio" name="blimply_push_tag" id="blimply_tag_' .$tag->term_id . '" />';
+				echo '<input type="radio" name="blimply_push_tag" id="blimply_tag_' .$tag->term_id . '" value="' . $tag->slug . '"/>';
 				echo '<label class="selectit" for="blimply_tag_' .$tag->term_id . '" style="margin-left: 4px">';
 				echo $tag->name;
 				echo '</label><br/>';				
 			}
+			echo '<input type="radio" name="blimply_push_tag" id="blimply_tag_broadcast" value="broadcast"/>';
+			echo '<label class="selectit" for="blimply_tag_broadcast" style="margin-left: 4px">';
+			_e( 'Broadcast (send to all tags)', 'blimply' );
+			echo '</label><br/>';
+			
+			
 			echo '<br/><input type="hidden" id="" name="blimply_push" value="0" />';
 			echo '<input type="checkbox" id="blimply_push" name="blimply_push" value="1" disabled="disabled" />';			
 			echo '<label for="blimply_push">';
