@@ -42,6 +42,7 @@ if (  ! class_exists( 'PEAR_Info' ) || ! PEAR_Info::packageInstalled( 'HTTP_Requ
 	return;
 }
 require_once( BLIMPLY_ROOT . '/lib/urban-airship/urbanairship.php' );
+require_once( BLIMPLY_ROOT . '/lib/settings-api-class/class.settings-api.php' );
 require_once( BLIMPLY_ROOT . '/lib/blimply-settings.php' );
 
 class Blimply {
@@ -77,7 +78,7 @@ class Blimply {
 	*/
 	function action_admin_init() {
 		// @todo init only on post edit screens and in dashboard
-		$this->options = get_option( 'blimply_options' );		
+		$this->options = get_option( 'urban_airship' );		
 		$this->airships[ $this->options['blimply_name'] ] = new Airship( $this->options['blimply_app_key'], $this->options['blimply_app_secret'] );
 		// Pass the reference to convenience var
 		// We don't use multiple Airships yet.
@@ -100,7 +101,6 @@ class Blimply {
 	 */
 	function register_scripts_and_styles() {
 		global $pagenow;
-		echo $pagenow;
 		// Only load this on the proper page
 		if ( ! in_array( $pagenow, array( 'post-new.php', 'post.php' ) ) )
 			return;
@@ -136,7 +136,7 @@ class Blimply {
 	* Send a push notification if checkbox is checked
 	*/
 	function action_save_post( $post_id ) {
-		if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) 
+		if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE || false  === wp_is_post_revision( $post_id ) ) 
 			return;
 		if ( !wp_verify_nonce( $_POST['blimply_nonce'], BLIMPLY_FILE_PATH ) )
       		return;
@@ -146,7 +146,7 @@ class Blimply {
       	if ( 1 == $_POST['blimply_push'] ) {
 			// @todo implement sending to tags if any specified
 			$alert = !empty( $_POST['blimply_push_alert'] ) ? esc_attr( $_POST['blimply_push_alert'] ) : esc_attr( $_POST['post_title'] );
-      		$broadcast_message = array( 'aps' => array( 'alert' => '' . $alert, 'badge' => '+1' ) );
+      		$broadcast_message = array( 'aps' => array( 'alert' => $alert, 'badge' => '+1' ) );
       		$this->request( $this->airship, 'broadcast', $broadcast_message  );
       		update_post_meta( $post_id, 'blimply_push_sent', true );
       	}
@@ -204,7 +204,6 @@ class Blimply {
 	 * @return mixed response or Exception or error
 	 */
 	function request( Airship &$airship, $method = '', $args = array(), $tokens = array() ) {
-		
 		if ( in_array( $method, array( 'register', 'deregister', 'feedback', 'push', 'broadcast' ) ) ) {
 			try {
 				$response = $airship->$method( $args, $tokens );
