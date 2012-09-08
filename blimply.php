@@ -2,7 +2,7 @@
 /*
 Plugin Name: Blimply
 Plugin URI: http://doejo.com
-Description: Blimply allows you to send push notifications to your mobile users utilizing Urban Airship API. 
+Description: Blimply allows you to send push notifications to your mobile users utilizing Urban Airship API. It sports a post meta box and a dashboard widgets. You have the ability to broadcast pushes, and to push to specific Urban Airship tags as well. 
 Author: Rinat Khaziev, doejo
 Version: 0.1
 Author URI: http://doejo.com
@@ -61,11 +61,12 @@ class Blimply {
 		add_action( 'init', array( $this, 'l10n' ) );
 		add_action( 'wp_dashboard_setup', array( $this, 'dashboard_setup' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'register_scripts_and_styles' ) );
+		add_action( 'wp_ajax_blimply-send-push', array( $this, 'handle_ajax_post' ) );
 	}
 	
 	function dashboard_setup() {
 	if ( is_blog_admin() && current_user_can('edit_posts') )
-		wp_add_dashboard_widget( 'dashboard_blimply', __( 'Send a Push notification' ), array( $this, 'dashboard_widget' ) );		
+		wp_add_dashboard_widget( 'dashboard_blimply', __( 'Send a Push Notification' ), array( $this, 'dashboard_widget' ) );		
 	}
 	
 	function l10n() {
@@ -102,10 +103,14 @@ class Blimply {
 	function register_scripts_and_styles() {
 		global $pagenow;
 		// Only load this on the proper page
-		if ( ! in_array( $pagenow, array( 'post-new.php', 'post.php' ) ) )
+		if ( ! in_array( $pagenow, array( 'post-new.php', 'post.php', 'index.php' ) ) )
 			return;
 		wp_enqueue_style( 'blimply-style', BLIMPLY_URL . '/lib/css/blimply.css' );
 		wp_enqueue_script( 'blimply-js', BLIMPLY_URL . '/lib/js/blimply.js', array( 'jquery' )  );
+		wp_localize_script( 'blimply-js', 'Blimply', array(
+			'push_sent' => __( 'Push notification successfully sent', 'blimply' ),
+			'push_error' => __( 'Sorry, there was some error while we were trying to send your push notification. Try again later!' )
+			) );
 	}	
 	
 	/**
@@ -134,6 +139,8 @@ class Blimply {
 	
 	/**
 	* Send a push notification if checkbox is checked
+	*
+	* @param int $post_id
 	*/
 	function action_save_post( $post_id ) {
 		if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE || false  === wp_is_post_revision( $post_id ) ) 
@@ -144,12 +151,34 @@ class Blimply {
       		return;
 
       	if ( 1 == $_POST['blimply_push'] ) {
-			// @todo implement sending to tags if any specified
 			$alert = !empty( $_POST['blimply_push_alert'] ) ? esc_attr( $_POST['blimply_push_alert'] ) : esc_attr( $_POST['post_title'] );
-      		$broadcast_message = array( 'aps' => array( 'alert' => $alert, 'badge' => '+1' ) );
-      		$this->request( $this->airship, 'broadcast', $broadcast_message  );
+      		$payload = array( 'aps' => array( 'alert' => $alert, 'badge' => '+1' ) );
+			if ( $_POST['blimply_push_tag'] === 'broadcast' ) {
+				$this->request( $this->airship, 'broadcast', $payload  );
+			}	else {
+				// Adding tags field to payload, no problem.
+				$payload['tags'] = $_POST['blimply_push_tag'];
+				$this->request( $this->airship, 'push', $payload );
+			}	
       		update_post_meta( $post_id, 'blimply_push_sent', true );
       	}
+	}
+	
+	function handle_ajax_post() {
+		if ( !wp_verify_nonce( $_POST['_wpnonce'], 'blimply-send-push' ) )
+			return;
+			$response = false;
+			$alert = wp_kses( $_POST['blimply_push_alert'], array() );
+      		$payload = array( 'aps' => array( 'alert' => $alert, 'badge' => '+1' ) );
+			if ( $_POST['blimply_push_tag'] === 'broadcast' ) {
+				$response =  $this->request( $this->airship, 'broadcast', $payload );
+			} else {
+				// Adding tags field to payload, no problem.
+				$payload['tags'] = $_POST['blimply_push_tag'];
+				$response = $this->request( $this->airship, 'push', $payload );
+			}
+			echo 'ok';
+			exit;
 	}
 
 	/**
@@ -217,7 +246,6 @@ class Blimply {
 				$exception_class = get_class( $e );
 				if ( is_admin() ) {
 					// @todo implement admin notification of misconfiguration
-					//echo $exception_class;
 				}
 			}
 			return $response;
@@ -227,98 +255,55 @@ class Blimply {
 	}
 	
 	function dashboard_widget() {
-		global $post_ID;
-	
-		$drafts = false;
-		if ( 'post' === strtolower( $_SERVER['REQUEST_METHOD'] ) && isset( $_POST['action'] ) && 0 === strpos( $_POST['action'], 'post-quickpress' ) && (int) $_POST['post_ID'] ) {
-			$view = get_permalink( $_POST['post_ID'] );
-			$edit = esc_url( get_edit_post_link( $_POST['post_ID'] ) );
-			if ( 'post-quickpress-publish' == $_POST['action'] ) {
-				if ( current_user_can('publish_posts') )
-					printf( '<div class="updated"><p>' . __( 'Post published. <a href="%s">View post</a> | <a href="%s">Edit post</a>' ) . '</p></div>', esc_url( $view ), $edit );
-				else
-					printf( '<div class="updated"><p>' . __( 'Post submitted. <a href="%s">Preview post</a> | <a href="%s">Edit post</a>' ) . '</p></div>', esc_url( add_query_arg( 'preview', 1, $view ) ), $edit );
-			} else {
-				printf( '<div class="updated"><p>' . __( 'Draft saved. <a href="%s">Preview post</a> | <a href="%s">Edit post</a>' ) . '</p></div>', esc_url( add_query_arg( 'preview', 1, $view ) ), $edit );
-				$drafts_query = new WP_Query( array(
-					'post_type' => 'post',
-					'post_status' => 'draft',
-					'author' => $GLOBALS['current_user']->ID,
-					'posts_per_page' => 1,
-					'orderby' => 'modified',
-					'order' => 'DESC'
-				) );
-	
-				if ( $drafts_query->posts )
-					$drafts =& $drafts_query->posts;
+		if ( 'post' === strtolower( $_SERVER['REQUEST_METHOD'] ) && isset( $_POST['action'] ) && 0 === strpos( $_POST['action'], 'blimply-send-push' ) ) {
+			if ( 'blimply-send-push' == $_POST['action'] ) {
+				if ( current_user_can( apply_filters( 'blimply_push_cap', 'publish_posts' ) ) )
+					printf( '<div class="updated"><p>' . __( 'Push notification sent' ) . '</p></div>' );
 			}
-			printf('<p class="textright">' . __('You can also try %s, easy blogging from anywhere on the Web.') . '</p>', '<a href="' . esc_url( admin_url( 'tools.php' ) ) . '">' . __('Press This') . '</a>' );
-			$_REQUEST = array(); // hack for get_default_post_to_edit()
 		}
-	
-		/* Check if a new auto-draft (= no new post_ID) is needed or if the old can be used */
-		$last_post_id = (int) get_user_option( 'dashboard_quick_press_last_post_id' ); // Get the last post_ID
-		if ( $last_post_id ) {
-			$post = get_post( $last_post_id );
-			if ( empty( $post ) || $post->post_status != 'auto-draft' ) { // auto-draft doesn't exists anymore
-				$post = get_default_post_to_edit('post', true);
-				update_user_option( (int) $GLOBALS['current_user']->ID, 'dashboard_quick_press_last_post_id', (int) $post->ID ); // Save post_ID
-			} else {
-				$post->post_title = ''; // Remove the auto draft title
-			}
-		} else {
-			$post = get_default_post_to_edit('post', true);
-			update_user_option( (int) $GLOBALS['current_user']->ID, 'dashboard_quick_press_last_post_id', (int) $post->ID ); // Save post_ID
-		}
-	
-		$post_ID = (int) $post->ID;
 	?>
 	
-		<form name="post" action="<?php echo esc_url( admin_url( 'post.php' ) ); ?>" method="post" id="quick-press">
-			<h4 id="quick-post-title"><label for="title"><?php _e('Title') ?></label></h4>
-			<div class="input-text-wrap">
-				<input type="text" name="post_title" id="title" tabindex="1" autocomplete="off" value="<?php echo esc_attr( $post->post_title ); ?>" />
-			</div>
-	
-			<?php if ( current_user_can( 'upload_files' ) ) : ?>
-			<div id="wp-content-wrap" class="wp-editor-wrap hide-if-no-js wp-media-buttons">
-				<?php do_action( 'media_buttons', 'content' ); ?>
-			</div>
-			<?php endif; ?>
-	
-			<h4 id="content-label"><label for="content"><?php _e('Content') ?></label></h4>
+		<form name="post" action="<?php echo esc_url( admin_url( 'admin-ajax.php' ) ); ?>" method="post" id="blimply-dashboard-widget">			
+			<h4 id="content-label"><label for="content"><?php _e('Send Push Notification') ?></label></h4>
 			<div class="textarea-wrap">
-				<textarea name="content" id="content" class="mceEditor" rows="3" cols="15" tabindex="2"><?php echo esc_textarea( $post->post_content ); ?></textarea>
+				<textarea name="blimply_push_alert" id="content" rows="3" cols="15" tabindex="2" placeholder="Your push message"></textarea>
 			</div>
 	
-			<script type="text/javascript">edCanvas = document.getElementById('content');edInsertContent = null;</script>
+			
 	
-			<h4><label for="tags-input"><?php _e('Tags') ?></label></h4>
-			<div class="input-text-wrap">
-				<input type="text" name="tags_input" id="tags-input" tabindex="3" value="<?php echo get_tags_to_edit( $post->ID ); ?>" />
-			</div>
-	
+			<h4><label for="tags-input"><?php _e('Choose a tag') ?></label></h4>
+			
+<?php
+			foreach ( (array) $this->tags as $tag ) {
+				echo '<label class="float-left f-left selectit" for="blimply_tag_' .$tag->term_id . '" style="margin-left: 4px">';
+				echo '<input type="radio" class="float-left f-left" style="float:left" name="blimply_push_tag" id="blimply_tag_' .$tag->term_id . '" value="' . $tag->slug . '"/>';
+				echo $tag->name;
+				echo '</label><br/>';				
+			}
+			echo '<label class="selectit" for="blimply_tag_broadcast" style="margin-left: 4px">';
+			echo '<input type="radio" style="float:left" name="blimply_push_tag" id="blimply_tag_broadcast" value="broadcast"/>';
+			_e( 'Broadcast (send to all tags)', 'blimply' );
+			echo '</label><br/>';
+?>				
 			<p class="submit">
-				<input type="hidden" name="action" id="quickpost-action" value="post-quickpress-save" />
-				<input type="hidden" name="post_ID" value="<?php echo $post_ID; ?>" />
-				<input type="hidden" name="post_type" value="post" />
-				<?php wp_nonce_field('add-post'); ?>
-				<?php submit_button( __( 'Save Draft' ), 'button', 'save', false, array( 'id' => 'save-post', 'tabindex'=> 4 ) ); ?>
+				<input type="hidden" name="action" id="blimply-push-action" value="blimply-send-push" />
+				<?php wp_nonce_field( 'blimply-send-push' ); ?>
 				<input type="reset" value="<?php esc_attr_e( 'Reset' ); ?>" class="button" />
 				<span id="publishing-action">
-					<input type="submit" name="publish" id="publish" accesskey="p" tabindex="5" class="button-primary" value="<?php current_user_can('publish_posts') ? esc_attr_e('Publish') : esc_attr_e('Submit for Review'); ?>" />
+					<?php
+					if ( current_user_can( apply_filters( 'blimply_push_cap', 'publish_posts' ) ) ):
+					?>
+					<input type="submit" name="publish" disabled="disabled" id="blimply_push_send" accesskey="p" tabindex="5" class="button-primary" value="<?php  esc_attr_e('Send push notification' ) ?>" />
+					<?php endif; ?>
 					<img class="waiting" src="<?php echo esc_url( admin_url( 'images/wpspin_light.gif' ) ); ?>" alt="" />
 				</span>
 				<br class="clear" />
 			</p>
 	
 		</form>
-	
-	<?php
-		if ( $drafts )
-			wp_dashboard_recent_drafts( $drafts );
-		}
-	
+
+<?php
+	}
 }
 
 // define BLIMPLY_NOINIT constant somewhere in your theme to easily subclass Blimply
