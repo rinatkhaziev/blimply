@@ -3,7 +3,7 @@ Contributors: rinatkhaziev, doejo
 Donate link: http://example.com/
 Tags: push, urban airship, notifications, widget
 Requires at least: 3.3
-Tested up to: 3.4.1
+Tested up to: 3.4.2
 Stable tag: 0.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -17,10 +17,11 @@ You will need [Urban Airship](http://urbanairship.com/) account in order to be a
 
 == Installation ==
 
+1. Install PEAR_Info pear package `pear install PEAR_INFO`
 1. Install HTTP_Request pear package `pear install HTTP_Request` (this is a dependency for Urban Airship PHP SDK)
-1. Upload `plugin-name.php` to the `/wp-content/plugins/` directory
+1. Upload `blimply` directory to the `/wp-content/plugins/` directory
 1. Activate the plugin through the 'Plugins' menu in WordPress
-1. Set application key and application secret in 'Settings' -> 'Blimply'
+1. Set application key and application secret in 'Settings' -> 'Blimply Settings'
 1. Enjoy responsibly
 
 == Frequently Asked Questions ==
@@ -39,19 +40,9 @@ the directory of the stable readme.txt, so in this case, `/tags/4.3/screenshot-1
 
 * Initial release
 
-== Arbitrary section ==
+== Frequently Asked Questions ==
 
-You may provide arbitrary sections, in the same format as the ones above.  This may be of use for extremely complicated
-plugins where more information needs to be conveyed that doesn't fit into the categories of "description" or
-"installation."  Arbitrary sections will be shown below the built-in sections outlined above.
-
-== A brief Markdown Example ==
-
-Ordered list:
-
-1. Some feature
-1. Another feature
-1. Something else about the plugin
+@todo talk about PEAR and why do we need this package installed
 
 Unordered list:
 
