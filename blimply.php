@@ -152,14 +152,7 @@ class Blimply {
 
       	if ( 1 == $_POST['blimply_push'] ) {
 			$alert = !empty( $_POST['blimply_push_alert'] ) ? esc_attr( $_POST['blimply_push_alert'] ) : esc_attr( $_POST['post_title'] );
-      		$payload = array( 'aps' => array( 'alert' => $alert, 'badge' => '+1' ) );
-			if ( $_POST['blimply_push_tag'] === 'broadcast' ) {
-				$this->request( $this->airship, 'broadcast', $payload  );
-			}	else {
-				// Adding tags field to payload, no problem.
-				$payload['tags'] = $_POST['blimply_push_tag'];
-				$this->request( $this->airship, 'push', $payload );
-			}	
+			$this->send_broadcast_or_push( $alert, $_POST['blimply_push_tag'] );
       		update_post_meta( $post_id, 'blimply_push_sent', true );
       	}
 	}
@@ -169,16 +162,20 @@ class Blimply {
 			return;
 			$response = false;
 			$alert = wp_kses( $_POST['blimply_push_alert'], array() );
+			$this->send_broadcast_or_push( $alert, $_POST['blimply_push_tag'] );
+			echo 'ok';
+			exit;
+	}
+	
+	function send_broadcast_or_push( $alert, $tag ) {
       		$payload = array( 'aps' => array( 'alert' => $alert, 'badge' => '+1' ) );
-			if ( $_POST['blimply_push_tag'] === 'broadcast' ) {
+			if ( $tag === 'broadcast' ) {
 				$response =  $this->request( $this->airship, 'broadcast', $payload );
 			} else {
 				// Adding tags field to payload, no problem.
-				$payload['tags'] = $_POST['blimply_push_tag'];
+				$payload['tags'] = $tag; 
 				$response = $this->request( $this->airship, 'push', $payload );
-			}
-			echo 'ok';
-			exit;
+			}		
 	}
 
 	/**
