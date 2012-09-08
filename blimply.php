@@ -152,22 +152,31 @@ class Blimply {
 
       	if ( 1 == $_POST['blimply_push'] ) {
 			$alert = !empty( $_POST['blimply_push_alert'] ) ? esc_attr( $_POST['blimply_push_alert'] ) : esc_attr( $_POST['post_title'] );
-			$this->send_broadcast_or_push( $alert, $_POST['blimply_push_tag'] );
+			$this->_send_broadcast_or_push( $alert, $_POST['blimply_push_tag'] );
       		update_post_meta( $post_id, 'blimply_push_sent', true );
       	}
 	}
 	
+	/**
+	 * Method to handle AJAX request for Dashboard Widget
+	 */
 	function handle_ajax_post() {
 		if ( !wp_verify_nonce( $_POST['_wpnonce'], 'blimply-send-push' ) )
 			return;
 			$response = false;
 			$alert = wp_kses( $_POST['blimply_push_alert'], array() );
-			$this->send_broadcast_or_push( $alert, $_POST['blimply_push_tag'] );
+			$this->_send_broadcast_or_push( $alert, $_POST['blimply_push_tag'] );
 			echo 'ok';
 			exit;
 	}
 	
-	function send_broadcast_or_push( $alert, $tag ) {
+	/**
+	 *
+	 * @param string $alert
+	 * @param string $tag
+	 *
+	 */
+	function _send_broadcast_or_push( $alert, $tag ) {
       		$payload = array( 'aps' => array( 'alert' => $alert, 'badge' => '+1' ) );
 			if ( $tag === 'broadcast' ) {
 				$response =  $this->request( $this->airship, 'broadcast', $payload );
