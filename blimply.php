@@ -65,8 +65,8 @@ class Blimply {
 	}
 	
 	function dashboard_setup() {
-	if ( is_blog_admin() && current_user_can('edit_posts') )
-		wp_add_dashboard_widget( 'dashboard_blimply', __( 'Send a Push Notification' ), array( $this, 'dashboard_widget' ) );		
+		if ( is_blog_admin() && current_user_can('edit_posts') )
+			wp_add_dashboard_widget( 'dashboard_blimply', __( 'Send a Push Notification' ), array( $this, 'dashboard_widget' ) );		
 	}
 	
 	function l10n() {
@@ -78,7 +78,11 @@ class Blimply {
 	*
 	*/
 	function action_admin_init() {
-		// @todo init only on post edit screens and in dashboard
+		global $pagenow;
+		// @todo test (might not work)
+		if ( ! in_array( $pagenow, array( 'post-new.php', 'post.php', 'index.php', 'options.php' ) ) )
+			return;		
+		
 		$this->options = get_option( 'urban_airship' );		
 		$this->airships[ $this->options['blimply_name'] ] = new Airship( $this->options['blimply_app_key'], $this->options['blimply_app_secret'] );
 		// Pass the reference to convenience var
@@ -163,14 +167,16 @@ class Blimply {
 	function handle_ajax_post() {
 		if ( !wp_verify_nonce( $_POST['_wpnonce'], 'blimply-send-push' ) )
 			return;
-			$response = false;
-			$alert = wp_kses( $_POST['blimply_push_alert'], array() );
-			$this->_send_broadcast_or_push( $alert, $_POST['blimply_push_tag'] );
-			echo 'ok';
-			exit;
+
+		$response = false;
+		$alert = wp_kses( $_POST['blimply_push_alert'], array() );
+		$this->_send_broadcast_or_push( $alert, $_POST['blimply_push_tag'] );
+		echo 'ok';
+		exit;
 	}
 	
 	/**
+	 * Private method to send push or broadcast.
 	 *
 	 * @param string $alert
 	 * @param string $tag
@@ -207,11 +213,11 @@ class Blimply {
 			echo '<div class="blimply-wrapper">';
 			wp_nonce_field( BLIMPLY_FILE_PATH, 'blimply_nonce' );
 			echo '<label for="blimply_push_alert">';
-		    	_e( 'Push message', 'blimply' );
+		    _e( 'Push message', 'blimply' );
 			echo '</label><br/> ';
 			echo '<textarea id="blimply_push_alert" name="blimply_push_alert" class="bl_textarea">' . $post->post_title . '</textarea><br/>';
 			echo '<strong>' . __( 'Send Push to following Urban Airship tags', 'blimply' ) . '</strong>';
-			foreach ( $this->tags as $tag ) {
+			foreach ( (array) $this->tags as $tag ) {
 				echo '<input type="radio" name="blimply_push_tag" id="blimply_tag_' .$tag->term_id . '" value="' . $tag->slug . '"/>';
 				echo '<label class="selectit" for="blimply_tag_' .$tag->term_id . '" style="margin-left: 4px">';
 				echo $tag->name;
@@ -261,14 +267,7 @@ class Blimply {
 	}
 	
 	function dashboard_widget() {
-		if ( 'post' === strtolower( $_SERVER['REQUEST_METHOD'] ) && isset( $_POST['action'] ) && 0 === strpos( $_POST['action'], 'blimply-send-push' ) ) {
-			if ( 'blimply-send-push' == $_POST['action'] ) {
-				if ( current_user_can( apply_filters( 'blimply_push_cap', 'publish_posts' ) ) )
-					printf( '<div class="updated"><p>' . __( 'Push notification sent' ) . '</p></div>' );
-			}
-		}
-	?>
-	
+	?>	
 		<form name="post" action="<?php echo esc_url( admin_url( 'admin-ajax.php' ) ); ?>" method="post" id="blimply-dashboard-widget">			
 			<h4 id="content-label"><label for="content"><?php _e('Send Push Notification') ?></label></h4>
 			<div class="textarea-wrap">
