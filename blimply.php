@@ -113,7 +113,7 @@ class Blimply {
 		wp_enqueue_script( 'blimply-js', BLIMPLY_URL . '/lib/js/blimply.js', array( 'jquery' )  );
 		wp_localize_script( 'blimply-js', 'Blimply', array(
 			'push_sent' => __( 'Push notification successfully sent', 'blimply' ),
-			'push_error' => __( 'Sorry, there was some error while we were trying to send your push notification. Try again later!' )
+			'push_error' => __( 'Sorry, there was some error while we were trying to send your push notification. Try again later!', 'blimply' )
 			) );
 	}	
 	
@@ -266,6 +266,10 @@ class Blimply {
 		}
 	}
 	
+	/**
+	 * Dashboard widget 
+	 *
+	 */
 	function dashboard_widget() {
 	?>	
 		<form name="post" action="<?php echo esc_url( admin_url( 'admin-ajax.php' ) ); ?>" method="post" id="blimply-dashboard-widget">			
