@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: blimply\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-09-07 15:36-0600\n"
-"PO-Revision-Date: 2012-09-07 15:36-0600\n"
+"POT-Creation-Date: 2012-09-10 16:05-0600\n"
+"PO-Revision-Date: 2012-09-10 16:05-0600\n"
 "Last-Translator: \n"
 "Language-Team: doejo\n"
 "Language: en_EN\n"
@@ -14,148 +14,213 @@ msgstr ""
 "X-Poedit-Basepath: .\n"
 "X-Poedit-SearchPath-0: ../..\n"
 
-#: ../../blimply.php:67
-msgid "Send a Push notification"
+#: ../../blimply.php:69
+msgid "Send a Push Notification"
 msgstr ""
 
-#: ../../blimply.php:88 ../../blimply.php:89
-#: ../../lib/blimply-settings.php:130
+#: ../../blimply.php:94 ../../blimply.php:95 ../../lib/blimply-settings.php:25
 msgid "Urban Airship Tags"
 msgstr ""
 
-#: ../../blimply.php:163
+#: ../../blimply.php:115
+msgid "Push notification successfully sent"
+msgstr ""
+
+#: ../../blimply.php:116
+msgid ""
+"Sorry, there was some error while we were trying to send your push "
+"notification. Try again later!"
+msgstr ""
+
+#: ../../blimply.php:204
 msgid "Push Notification"
 msgstr ""
 
-#: ../../blimply.php:175
+#: ../../blimply.php:216
 msgid "Push message"
 msgstr ""
 
-#: ../../blimply.php:178
+#: ../../blimply.php:219
 msgid "Send Push to following Urban Airship tags"
 msgstr ""
 
-#: ../../blimply.php:188
-msgid "Send it"
-msgstr ""
-
-#: ../../blimply.php:193
-msgid "Push notification is already sent"
-msgstr ""
-
-#: ../../blimply.php:233
-#, php-format
-msgid ""
-"Post published. <a href=\"%s\">View post</a> | <a href=\"%s\">Edit post</a>"
+#: ../../blimply.php:228 ../../blimply.php:290
+msgid "Broadcast (send to all tags)"
 msgstr ""
 
 #: ../../blimply.php:235
-#, php-format
-msgid ""
-"Post submitted. <a href=\"%s\">Preview post</a> | <a href=\"%s\">Edit post</"
-"a>"
+msgid "Check to confirm sending"
 msgstr ""
 
-#: ../../blimply.php:237
-#, php-format
-msgid ""
-"Draft saved. <a href=\"%s\">Preview post</a> | <a href=\"%s\">Edit post</a>"
+#: ../../blimply.php:240
+msgid "Push notification is already sent"
 msgstr ""
 
-#: ../../blimply.php:250
-#, php-format
-msgid "You can also try %s, easy blogging from anywhere on the Web."
+#: ../../blimply.php:276
+msgid "Send Push Notification"
 msgstr ""
 
-#: ../../blimply.php:250
-msgid "Press This"
+#: ../../blimply.php:280
+msgid "Choose a tag"
 msgstr ""
 
-#: ../../blimply.php:273
-msgid "Title"
+#: ../../lib/blimply-settings.php:24
+msgid "Blimply Settings"
 msgstr ""
 
-#: ../../blimply.php:284
-msgid "Content"
+#: ../../lib/blimply-settings.php:32
+msgid "Urban Airship Settings"
 msgstr ""
 
-#: ../../blimply.php:291
-msgid "Tags"
-msgstr ""
-
-#: ../../blimply.php:301
-msgid "Save Draft"
-msgstr ""
-
-#: ../../lib/blimply-options.php:11
-msgid "Urban Airship API Settings"
-msgstr ""
-
-#: ../../lib/blimply-options.php:25
+#: ../../lib/blimply-settings.php:49 ../../lib/blimply-settings.php:56
 msgid "Urban Airship Application Slug!"
 msgstr ""
 
-#: ../../lib/blimply-options.php:26
+#: ../../lib/blimply-settings.php:50
+#: ../../lib/settings-api-class/procedural-example.php:36
+#: ../../lib/settings-api-class/procedural-example.php:90
+#: ../../lib/settings-api-class/procedural-example.php:145
+#: ../../lib/settings-api-class/settings-api.php:72
+#: ../../lib/settings-api-class/settings-api.php:126
+#: ../../lib/settings-api-class/settings-api.php:181
+msgid "Text input description"
+msgstr ""
+
+#: ../../lib/blimply-settings.php:57
 msgid "Something like my-test-app."
 msgstr ""
 
-#: ../../lib/blimply-options.php:28 ../../lib/blimply-options.php:37
-#: ../../lib/blimply-options.php:46
+#: ../../lib/blimply-settings.php:59 ../../lib/blimply-settings.php:67
+#: ../../lib/blimply-settings.php:75
 msgid "my-blimply"
 msgstr ""
 
-#: ../../lib/blimply-options.php:34
+#: ../../lib/blimply-settings.php:64
 msgid "Application API Key"
 msgstr ""
 
-#: ../../lib/blimply-options.php:35
+#: ../../lib/blimply-settings.php:65
 msgid "22 character long app key( like SYk74m98TOiUhHHHHb5l_Q."
 msgstr ""
 
-#: ../../lib/blimply-options.php:43
+#: ../../lib/blimply-settings.php:72
 msgid "Application Master Secret"
 msgstr ""
 
-#: ../../lib/blimply-options.php:44
+#: ../../lib/blimply-settings.php:73
 msgid "22 character long app master secret( like SYk74m98TOiUhHHHHb5l_Q."
 msgstr ""
 
-#: ../../lib/blimply-options.php:58
-msgid "Blimply"
+#: ../../lib/settings-api-class/procedural-example.php:19
+#: ../../lib/settings-api-class/settings-api.php:47
+msgid "Basic Settings"
 msgstr ""
 
-#: ../../lib/blimply-options.php:59
-msgid "Urban Airship and Blimply Settings."
+#: ../../lib/settings-api-class/procedural-example.php:23
+#: ../../lib/settings-api-class/settings-api.php:51
+msgid "Advanced Settings"
 msgstr ""
 
-#: ../../lib/blimply-settings.php:30
-msgid "Blimply Settings Page"
+#: ../../lib/settings-api-class/procedural-example.php:27
+#: ../../lib/settings-api-class/settings-api.php:55
+msgid "Other Settings"
 msgstr ""
 
-#: ../../lib/blimply-settings.php:123
-msgid "Blimply Options"
+#: ../../lib/settings-api-class/procedural-example.php:35
+#: ../../lib/settings-api-class/procedural-example.php:89
+#: ../../lib/settings-api-class/procedural-example.php:144
+#: ../../lib/settings-api-class/settings-api.php:71
+#: ../../lib/settings-api-class/settings-api.php:125
+#: ../../lib/settings-api-class/settings-api.php:180
+msgid "Text Input"
 msgstr ""
 
-#: ../../lib/blimply-settings.php:321
-msgid "Expecting a Numeric value! Please fix."
+#: ../../lib/settings-api-class/procedural-example.php:42
+#: ../../lib/settings-api-class/procedural-example.php:96
+#: ../../lib/settings-api-class/procedural-example.php:151
+#: ../../lib/settings-api-class/settings-api.php:78
+#: ../../lib/settings-api-class/settings-api.php:132
+#: ../../lib/settings-api-class/settings-api.php:187
+msgid "Textarea Input"
 msgstr ""
 
-#: ../../lib/blimply-settings.php:334
-msgid "Expecting comma separated numeric values"
+#: ../../lib/settings-api-class/procedural-example.php:43
+#: ../../lib/settings-api-class/procedural-example.php:97
+#: ../../lib/settings-api-class/procedural-example.php:152
+#: ../../lib/settings-api-class/settings-api.php:79
+#: ../../lib/settings-api-class/settings-api.php:133
+#: ../../lib/settings-api-class/settings-api.php:188
+msgid "Textarea description"
 msgstr ""
 
-#: ../../lib/blimply-settings.php:344
-msgid "Expecting comma separated numeric values! Please fix."
+#: ../../lib/settings-api-class/procedural-example.php:48
+#: ../../lib/settings-api-class/procedural-example.php:102
+#: ../../lib/settings-api-class/procedural-example.php:157
+#: ../../lib/settings-api-class/settings-api.php:84
+#: ../../lib/settings-api-class/settings-api.php:138
+#: ../../lib/settings-api-class/settings-api.php:193
+msgid "Checkbox"
 msgstr ""
 
-#: ../../lib/blimply-settings.php:369
-msgid "Invalid email! Please re-enter!"
+#: ../../lib/settings-api-class/procedural-example.php:49
+#: ../../lib/settings-api-class/procedural-example.php:103
+#: ../../lib/settings-api-class/procedural-example.php:158
+#: ../../lib/settings-api-class/settings-api.php:85
+#: ../../lib/settings-api-class/settings-api.php:139
+#: ../../lib/settings-api-class/settings-api.php:194
+msgid "Checkbox Label"
 msgstr ""
 
-#: ../../lib/blimply-settings.php:371
-msgid "This setting field cannot be empty! Please enter a valid email address."
+#: ../../lib/settings-api-class/procedural-example.php:54
+#: ../../lib/settings-api-class/procedural-example.php:108
+#: ../../lib/settings-api-class/procedural-example.php:163
+#: ../../lib/settings-api-class/settings-api.php:90
+#: ../../lib/settings-api-class/settings-api.php:144
+#: ../../lib/settings-api-class/settings-api.php:199
+msgid "Radio Button"
 msgstr ""
 
-#: ../../lib/blimply-settings.php:379
-msgid "Please enter a valid email address."
+#: ../../lib/settings-api-class/procedural-example.php:55
+#: ../../lib/settings-api-class/procedural-example.php:109
+#: ../../lib/settings-api-class/procedural-example.php:164
+#: ../../lib/settings-api-class/settings-api.php:91
+#: ../../lib/settings-api-class/settings-api.php:145
+#: ../../lib/settings-api-class/settings-api.php:200
+msgid "A radio button"
+msgstr ""
+
+#: ../../lib/settings-api-class/procedural-example.php:64
+#: ../../lib/settings-api-class/procedural-example.php:119
+#: ../../lib/settings-api-class/procedural-example.php:173
+#: ../../lib/settings-api-class/settings-api.php:100
+#: ../../lib/settings-api-class/settings-api.php:155
+#: ../../lib/settings-api-class/settings-api.php:209
+msgid "Multile checkbox"
+msgstr ""
+
+#: ../../lib/settings-api-class/procedural-example.php:65
+#: ../../lib/settings-api-class/procedural-example.php:120
+#: ../../lib/settings-api-class/procedural-example.php:174
+#: ../../lib/settings-api-class/settings-api.php:101
+#: ../../lib/settings-api-class/settings-api.php:156
+#: ../../lib/settings-api-class/settings-api.php:210
+msgid "Multi checkbox description"
+msgstr ""
+
+#: ../../lib/settings-api-class/procedural-example.php:76
+#: ../../lib/settings-api-class/procedural-example.php:132
+#: ../../lib/settings-api-class/procedural-example.php:185
+#: ../../lib/settings-api-class/settings-api.php:112
+#: ../../lib/settings-api-class/settings-api.php:168
+#: ../../lib/settings-api-class/settings-api.php:221
+msgid "A Dropdown"
+msgstr ""
+
+#: ../../lib/settings-api-class/procedural-example.php:77
+#: ../../lib/settings-api-class/procedural-example.php:133
+#: ../../lib/settings-api-class/procedural-example.php:186
+#: ../../lib/settings-api-class/settings-api.php:113
+#: ../../lib/settings-api-class/settings-api.php:169
+#: ../../lib/settings-api-class/settings-api.php:222
+msgid "Dropdown description"
 msgstr ""
