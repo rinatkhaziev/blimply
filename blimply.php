@@ -273,11 +273,7 @@ class Blimply {
 			<div class="textarea-wrap">
 				<textarea name="blimply_push_alert" id="content" rows="3" cols="15" tabindex="2" placeholder="Your push message"></textarea>
 			</div>
-	
-			
-	
 			<h4><label for="tags-input"><?php _e('Choose a tag') ?></label></h4>
-			
 <?php
 			foreach ( (array) $this->tags as $tag ) {
 				echo '<label class="float-left f-left selectit" for="blimply_tag_' .$tag->term_id . '" style="margin-left: 4px">';
@@ -304,9 +300,7 @@ class Blimply {
 				</span>
 				<br class="clear" />
 			</p>
-	
 		</form>
-
 <?php
 	}
 }

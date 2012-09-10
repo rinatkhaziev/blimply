@@ -17,7 +17,7 @@ You will need [Urban Airship](http://urbanairship.com/) account in order to be a
 
 == Installation ==
 
-1. Install PEAR_Info pear package `pear install PEAR_INFO`
+1. Install PEAR_Info pear package `pear install PEAR_Info`
 1. Install HTTP_Request pear package `pear install HTTP_Request` (this is a dependency for Urban Airship PHP SDK)
 1. Upload `blimply` directory to the `/wp-content/plugins/` directory
 1. Activate the plugin through the 'Plugins' menu in WordPress
@@ -42,4 +42,7 @@ the directory of the stable readme.txt, so in this case, `/tags/4.3/screenshot-1
 
 == Frequently Asked Questions ==
 
-@todo talk about PEAR and why do we need this package installed
+= Why do I need to install PEAR packages = 
+
+This plugin uses official Urban Airship PHP SDK. The SDK itself uses PEAR package HTTP_Request to implement REST Client. Without PEAR_Info and HTTP_Request the plugin simply won't be functional.
+I used Urban Airship to face tight deadline for the initial release. I might refactor the REST client in future releases, but for now, these PEAR packages are required for the plugin to work.
