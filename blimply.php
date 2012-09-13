@@ -79,9 +79,9 @@ class Blimply {
 	*/
 	function action_admin_init() {
 		global $pagenow;
-		// @todo test (might not work)
-		//if ( ! in_array( $pagenow, array( 'post-new.php', 'post.php', 'index.php', 'options.php' ) ) )
-		//	return;		
+		// Init the plugin only on proper pages and if doing ajax request
+		if ( ! in_array( $pagenow, array( 'post-new.php', 'post.php', 'index.php', 'options.php' ) ) && ! defined( 'DOING_AJAX' ) )
+			return;		
 		
 		$this->options = get_option( 'urban_airship' );		
 		$this->airships[ $this->options['blimply_name'] ] = new Airship( $this->options['blimply_app_key'], $this->options['blimply_app_secret'] );
@@ -190,8 +190,7 @@ class Blimply {
 			} else {
 				// Adding tags field to payload, no problem.
 				$payload['tags'] = array( $tag ); 
-				$response = $this->request( $this->airship, 'push', $payload );
-				
+				$response = $this->request( $this->airship, 'push', $payload );	
 			}		
 	}
 
