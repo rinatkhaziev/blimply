@@ -80,8 +80,8 @@ class Blimply {
 	function action_admin_init() {
 		global $pagenow;
 		// @todo test (might not work)
-		if ( ! in_array( $pagenow, array( 'post-new.php', 'post.php', 'index.php', 'options.php' ) ) )
-			return;		
+		//if ( ! in_array( $pagenow, array( 'post-new.php', 'post.php', 'index.php', 'options.php' ) ) )
+		//	return;		
 		
 		$this->options = get_option( 'urban_airship' );		
 		$this->airships[ $this->options['blimply_name'] ] = new Airship( $this->options['blimply_app_key'], $this->options['blimply_app_secret'] );
@@ -183,6 +183,7 @@ class Blimply {
 	 *
 	 */
 	function _send_broadcast_or_push( $alert, $tag ) {
+		
       		$payload = array( 'aps' => array( 'alert' => $alert, 'badge' => '+1' ) );
 			if ( $tag === 'broadcast' ) {
 				$response =  $this->request( $this->airship, 'broadcast', $payload );
