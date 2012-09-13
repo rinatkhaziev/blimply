@@ -189,8 +189,9 @@ class Blimply {
 				$response =  $this->request( $this->airship, 'broadcast', $payload );
 			} else {
 				// Adding tags field to payload, no problem.
-				$payload['tags'] = $tag; 
+				$payload['tags'] = array( $tag ); 
 				$response = $this->request( $this->airship, 'push', $payload );
+				
 			}		
 	}
 
