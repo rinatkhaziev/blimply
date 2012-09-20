@@ -23,15 +23,11 @@ You will need an [Urban Airship](http://urbanairship.com/) account in order to b
 1. Set application key and application secret in 'Settings' -> 'Blimply Settings'
 1. Enjoy responsibly
 
-== Frequently Asked Questions ==
-
-None yet
-
 == Screenshots ==
 
-1. This screen shot description corresponds to screenshot-1.(png|jpg|jpeg|gif). Note that the screenshot is taken from
-the directory of the stable readme.txt, so in this case, `/tags/4.3/screenshot-1.png` (or jpg, jpeg, gif)
-2. This is the second screen shot
+1. Per-post Push notification
+2. Dashboard widget
+3. Blimply Settings 
 
 == Changelog ==
 
