@@ -89,6 +89,7 @@ class Blimply {
 		// We don't use multiple Airships yet.
 		// Although we can, there's no UI for switching Airships.
 		$this->airship = &$this->airships[ $this->options['blimply_name'] ];
+		// We don't use built-in WP UI, instead we choose tag in custom Blimply meta box
 		register_taxonomy( 'blimply_tags', array( 'post' ), array(
 			'public' => false,
 			'labels' => array(
@@ -114,8 +115,9 @@ class Blimply {
 		wp_enqueue_script( 'blimply-js', BLIMPLY_URL . '/lib/js/blimply.js', array( 'jquery' )  );
 		wp_localize_script( 'blimply-js', 'Blimply', array(
 			'push_sent' => __( 'Push notification successfully sent', 'blimply' ),
-			'push_error' => __( 'Sorry, there was some error while we were trying to send your push notification. Try again later!', 'blimply' )
-			) );
+			'push_error' => __( 'Sorry, there was some error while we were trying to send your push notification. Try again later!', 'blimply' ),
+			)
+		);
 	}	
 	
 	/**
