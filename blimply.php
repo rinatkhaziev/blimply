@@ -87,6 +87,7 @@ class Blimply {
 		$this->airships[ $this->options['blimply_name'] ] = new Airship( $this->options['blimply_app_key'], $this->options['blimply_app_secret'] );
 		// Pass the reference to convenience var
 		// We don't use multiple Airships yet.
+		// Although we can, there's no UI for switching Airships.
 		$this->airship = &$this->airships[ $this->options['blimply_name'] ];
 		register_taxonomy( 'blimply_tags', array( 'post' ), array(
 			'public' => false,
@@ -183,15 +184,14 @@ class Blimply {
 	 *
 	 */
 	function _send_broadcast_or_push( $alert, $tag ) {
-		
-      		$payload = array( 'aps' => array( 'alert' => $alert, 'badge' => '+1' ) );
-			if ( $tag === 'broadcast' ) {
-				$response =  $this->request( $this->airship, 'broadcast', $payload );
-			} else {
-				// Adding tags field to payload, no problem.
-				$payload['tags'] = array( $tag ); 
-				$response = $this->request( $this->airship, 'push', $payload );	
-			}		
+		$payload = array( 'aps' => array( 'alert' => $alert, 'badge' => '+1' ) );
+		if ( $tag === 'broadcast' ) {
+			$response =  $this->request( $this->airship, 'broadcast', $payload );
+		} else {
+			// Adding tags field to payload, no problem.
+			$payload['tags'] = array( $tag ); 
+			$response = $this->request( $this->airship, 'push', $payload );	
+		}		
 	}
 
 	/**
