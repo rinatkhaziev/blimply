@@ -6,8 +6,8 @@ class Blimply_Settings {
     function __construct() {
         $this->settings_api = WeDevs_Settings_API::getInstance();
 
-        add_action( 'admin_init', array($this, 'admin_init') );
-        add_action( 'admin_menu', array($this, 'admin_menu') );
+        add_action( 'admin_init', array( $this, 'admin_init' ) );
+        add_action( 'admin_menu', array( $this, 'admin_menu' ) );
     }
 
     function admin_init() {
@@ -51,30 +51,30 @@ class Blimply_Settings {
                     'type' => 'text',
                     'default' => 'Title'
                 ),
-				array(
-					'name' => BLIMPLY_PREFIX . '_name',
-					'label' => __( 'Urban Airship Application Slug!', 'blimply' ),
-					'desc' => __( 'Something like my-test-app.', 'blimply' ),
-					'type' => 'text',
-					'std' => __( 'my-blimply','blimply' ),
-					'class'=> 'nohtml'
-				),
-				array(
-					'name' => BLIMPLY_PREFIX . '_app_key',
-					'label'=> __( 'Application API Key', 'blimply' ),
-					'desc'=> __( '22 character long app key( like SYk74m98TOiUhHHHHb5l_Q.', 'blimply' ),
-					'type'=> 'text',
-					'std' => __( 'my-blimply','blimply' ),
-					'class'=> 'nohtml'
-				),
-				array(
-					'name' => BLIMPLY_PREFIX . '_app_secret',
-					'label'=> __( 'Application Master Secret', 'blimply' ),
-					'desc'=> __( '22 character long app master secret( like SYk74m98TOiUhHHHHb5l_Q.', 'blimply' ),
-					'type'=> 'text',
-					'std' => __( 'my-blimply','blimply' ),
-					'class'=> 'nohtml'
-				),
+                array(
+                    'name' => BLIMPLY_PREFIX . '_name',
+                    'label' => __( 'Urban Airship Application Slug!', 'blimply' ),
+                    'desc' => __( 'Something like my-test-app.', 'blimply' ),
+                    'type' => 'text',
+                    'std' => __( 'my-blimply', 'blimply' ),
+                    'class'=> 'nohtml'
+                ),
+                array(
+                    'name' => BLIMPLY_PREFIX . '_app_key',
+                    'label'=> __( 'Application API Key', 'blimply' ),
+                    'desc'=> __( '22 character long app key( like SYk74m98TOiUhHHHHb5l_Q.', 'blimply' ),
+                    'type'=> 'text',
+                    'std' => __( 'my-blimply', 'blimply' ),
+                    'class'=> 'nohtml'
+                ),
+                array(
+                    'name' => BLIMPLY_PREFIX . '_app_secret',
+                    'label'=> __( 'Application Master Secret', 'blimply' ),
+                    'desc'=> __( '22 character long app master secret( like SYk74m98TOiUhHHHHb5l_Q.', 'blimply' ),
+                    'type'=> 'text',
+                    'std' => __( 'my-blimply', 'blimply' ),
+                    'class'=> 'nohtml'
+                ),
             ),
         );
 
@@ -100,7 +100,7 @@ class Blimply_Settings {
         $pages = get_pages();
         $pages_options = array();
         if ( $pages ) {
-            foreach ($pages as $page) {
+            foreach ( $pages as $page ) {
                 $pages_options[$page->ID] = $page->post_title;
             }
         }

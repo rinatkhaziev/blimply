@@ -16,6 +16,10 @@ Blimply is a plugin that will allow you to send push notifications to your mobil
 
 This plugin is under active development. Reports of any issues and pull requests are welcome!
 
+## Developers
+
+Pull requests are welcome, make sure you make them against "develop" branch
+
 ## Future improvements
 * Multiple Airship apps support
 * Rich Push
