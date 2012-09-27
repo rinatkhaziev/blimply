@@ -32,7 +32,6 @@ define( 'BLIMPLY_URL' , plugins_url( '/', __FILE__ ) );
 define( 'BLIMPLY_PREFIX' , 'blimply' );
 
 // Bootstrap
-
 require_once BLIMPLY_ROOT . '/lib/wp-urban-airship/urbanairship.php';
 require_once BLIMPLY_ROOT . '/lib/settings-api-class/class.settings-api.php';
 require_once BLIMPLY_ROOT . '/lib/blimply-settings.php';
