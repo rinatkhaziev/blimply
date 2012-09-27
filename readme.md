@@ -7,8 +7,6 @@ Blimply is a plugin that will allow you to send push notifications to your mobil
 ## Installation
 
 1. `git clone https://github.com/rinatkhaziev/blimply.git` in your WP plugins directory
-1. Navigate to freshly created folder and do `git submodule update --init --recursive`
-1. Make sure that PEAR_Info and HTTP_Request PEAR packages are installed
 1. Configure Urban Airship API key and secret (note that it should be master secret)
 1. (Optional) Set up Urban Airship tags
 
@@ -23,4 +21,3 @@ Pull requests are welcome, make sure you make them against "develop" branch
 ## Future improvements
 * Multiple Airship apps support
 * Rich Push
-* Get rid of PEAR dependencies. Refactor RESTful client to use WordPress core HTTP API
