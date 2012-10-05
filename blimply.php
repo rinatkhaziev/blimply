@@ -218,11 +218,13 @@ class Blimply {
 				echo $tag->name;
 				echo '</label><br/>';
 			}
-			echo '<input type="radio" name="blimply_push_tag" id="blimply_tag_broadcast" value="broadcast"/>';
-			echo '<label class="selectit" for="blimply_tag_broadcast" style="margin-left: 4px">';
-			_e( 'Broadcast (send to all tags)', 'blimply' );
-			echo '</label><br/>';
 
+			if ( $this->options['blimply_allow_broadcast'] == 'on' ) {
+				echo '<input type="radio" name="blimply_push_tag" id="blimply_tag_broadcast" value="broadcast"/>';
+				echo '<label class="selectit" for="blimply_tag_broadcast" style="margin-left: 4px">';
+				_e( 'Broadcast (send to all tags)', 'blimply' );
+				echo '</label><br/>';
+			}
 
 			echo '<br/><input type="hidden" id="" name="blimply_push" value="0" />';
 			echo '<input type="checkbox" id="blimply_push" name="blimply_push" value="1" disabled="disabled" />';
@@ -280,10 +282,13 @@ class Blimply {
 			echo $tag->name;
 			echo '</label><br/>';
 		}
-		echo '<label class="selectit" for="blimply_tag_broadcast" style="margin-left: 4px">';
-		echo '<input type="radio" style="float:left" name="blimply_push_tag" id="blimply_tag_broadcast" value="broadcast"/>';
-		_e( 'Broadcast (send to all tags)', 'blimply' );
-		echo '</label><br/>';
+
+		if ( $this->options['blimply_allow_broadcast'] == 'on' ) {
+			echo '<label class="selectit" for="blimply_tag_broadcast" style="margin-left: 4px">';
+			echo '<input type="radio" style="float:left" name="blimply_push_tag" id="blimply_tag_broadcast" value="broadcast"/>';
+			_e( 'Broadcast (send to all tags)', 'blimply' );
+			echo '</label><br/>';
+		}	
 ?>
 			<p class="submit">
 				<input type="hidden" name="action" id="blimply-push-action" value="blimply-send-push" />
