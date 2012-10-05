@@ -176,6 +176,8 @@ class Blimply {
 	 *
 	 */
 	function _send_broadcast_or_push( $alert, $tag ) {
+		// Strip escape slashes, otherwise double escaping would happen
+		$alert = stripcslashes( $alert );
 		$payload = array( 'aps' => array( 'alert' => $alert, 'badge' => '+1' ) );
 		if ( $tag === 'broadcast' ) {
 			$response =  $this->request( $this->airship, 'broadcast', $payload );
