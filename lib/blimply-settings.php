@@ -86,7 +86,7 @@ class Blimply_Settings {
             $settings_fields['blimply_sounds'][] = array(
                 'name' => BLIMPLY_PREFIX . '_sound_' . $tag->slug,
                 'label'=> __( 'Sound for tag: ' . $tag->name , 'blimply' ),
-                'desc'=> __( 'You may specify a sound that will accompany your push. Must match filename of a sound bundled in your app. Leave blank for default.', 'blimply' ),
+                'desc'=> __( 'You may specify a sound that will accompany your push. Must match filename of a sound bundled in your app. Leave blank for default. Ex: my_sound.caf', 'blimply' ),
                 'type'=> 'text',
                 'std' => __( '', 'blimply' ),
                 'class'=> 'nohtml'
