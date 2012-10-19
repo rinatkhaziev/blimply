@@ -234,7 +234,7 @@ class Blimply {
 				echo '</label><br/>';
 			}
 
-			if ( $this->options['blimply_allow_broadcast'] == 'on' ) {
+			if ( isset( $this->options['blimply_allow_broadcast'] ) && $this->options['blimply_allow_broadcast'] == 'on' ) {
 				echo '<input type="radio" name="blimply_push_tag" id="blimply_tag_broadcast" value="broadcast"/>';
 				echo '<label class="selectit" for="blimply_tag_broadcast" style="margin-left: 4px">';
 				_e( 'Broadcast (send to all tags)', 'blimply' );
@@ -298,7 +298,7 @@ class Blimply {
 			echo '</label><br/>';
 		}
 
-		if ( $this->options['blimply_allow_broadcast'] == 'on' ) {
+		if ( isset( $this->options['blimply_allow_broadcast'] ) && $this->options['blimply_allow_broadcast'] == 'on' ) {
 			echo '<label class="selectit" for="blimply_tag_broadcast" style="margin-left: 4px">';
 			echo '<input type="radio" style="float:left" name="blimply_push_tag" id="blimply_tag_broadcast" value="broadcast"/>';
 			_e( 'Broadcast (send to all tags)', 'blimply' );
