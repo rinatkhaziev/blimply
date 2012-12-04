@@ -56,7 +56,7 @@ class Blimply {
 	}
 
 	function dashboard_setup() {
-		if ( is_blog_admin() && current_user_can( 'edit_posts' ) )
+		if ( is_blog_admin() && current_user_can( apply_filters( 'blimply_push_cap', 'edit_posts' ) ) )
 			wp_add_dashboard_widget( 'dashboard_blimply', __( 'Send a Push Notification' ), array( $this, 'dashboard_widget' ) );
 	}
 
@@ -149,6 +149,8 @@ class Blimply {
 			return;
 		if ( !wp_verify_nonce( $_POST['blimply_nonce'], BLIMPLY_FILE_PATH ) )
 			return;
+		if ( !current_user_can( apply_filters( 'blimply_push_cap', 'edit_posts' ) ) )
+			return;
 		if ( 1 == get_post_meta( $post->ID, 'blimply_push_sent', true ) )
 			return;
 
@@ -165,7 +167,8 @@ class Blimply {
 	function handle_ajax_post() {
 		if ( !wp_verify_nonce( $_POST['_wpnonce'], 'blimply-send-push' ) )
 			return;
-
+		if ( !current_user_can( apply_filters( 'blimply_push_cap', 'edit_posts' ) ) )
+			return;
 		$response = false;
 		$alert = wp_kses( $_POST['blimply_push_alert'], array() );
 		$this->_send_broadcast_or_push( $alert, $_POST['blimply_push_tag'] );
