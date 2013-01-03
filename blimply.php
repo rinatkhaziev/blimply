@@ -193,8 +193,7 @@ class Blimply {
 	function _send_broadcast_or_push( $alert, $tag, $url = false ) {
 		// Strip escape slashes, otherwise double escaping would happen
 		$alert = stripcslashes( $alert );
-		$aps_settings = apply_filters( 'blimply_aps_settings', array( 'alert' => $alert, 'badge' => '+1' ), $alert, $tag );
-		$payload = array( 'aps' => $aps_settings );
+		$payload = array( 'aps' => array( 'alert' => $alert, 'badge' => '+1' ) );
 		// Add a URL if any, to be handled by apps
 		if ( $url ) 
 			$payload['aps']['url'] = $url;
@@ -275,6 +274,7 @@ class Blimply {
 	 */
 	function request( Airship &$airship, $method = '', $args = array(), $tokens = array() ) {
 		if ( in_array( $method, array( 'register', 'deregister', 'feedback', 'push', 'broadcast' ) ) ) {
+			$args = apply_filters( "blimply_{$method}_args", $args, $tokens );
 			try {
 				$response = $airship->$method( $args, $tokens );
 			} catch ( Exception $e ) {
