@@ -277,13 +277,13 @@ class Blimply {
 			$args = apply_filters( "blimply_{$method}_args", $args, $airship, $tokens );
 			try {
 				$response = $airship->$method( $args, $tokens );
+				return $response;
 			} catch ( Exception $e ) {
 				$exception_class = get_class( $e );
 				if ( is_admin() ) {
 					// @todo implement admin notification of misconfiguration
 				}
 			}
-			return $response;
 		} else {
 			// @todo illegal request
 		}
