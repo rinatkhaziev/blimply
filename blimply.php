@@ -154,11 +154,11 @@ class Blimply {
 	function action_save_post( $post_id ) {
 		if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE || false  === wp_is_post_revision( $post_id ) )
 			return;
-		if ( !wp_verify_nonce( $_POST['blimply_nonce'], BLIMPLY_FILE_PATH ) )
+		if ( isset( $_POST['blimply_nonce'] ) && !wp_verify_nonce( $_POST['blimply_nonce'], BLIMPLY_FILE_PATH ) )
 			return;
 		if ( !current_user_can( apply_filters( 'blimply_push_cap', 'edit_posts' ) ) )
 			return;
-		if ( 1 == get_post_meta( $post->ID, 'blimply_push_sent', true ) )
+		if ( 1 == get_post_meta( $post_id, 'blimply_push_sent', true ) )
 			return;
 
 		if ( 1 == $_POST['blimply_push'] ) {
