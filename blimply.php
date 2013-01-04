@@ -274,7 +274,7 @@ class Blimply {
 	 */
 	function request( Airship &$airship, $method = '', $args = array(), $tokens = array() ) {
 		if ( in_array( $method, array( 'register', 'deregister', 'feedback', 'push', 'broadcast' ) ) ) {
-			$args = apply_filters( "blimply_{$method}_args", $args, $tokens );
+			$args = apply_filters( "blimply_{$method}_args", $args, $airship, $tokens );
 			try {
 				$response = $airship->$method( $args, $tokens );
 			} catch ( Exception $e ) {
