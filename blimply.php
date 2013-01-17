@@ -193,12 +193,17 @@ class Blimply {
 	function _send_broadcast_or_push( $alert, $tag, $url = false ) {
 		// Strip escape slashes, otherwise double escaping would happen
 		$alert = stripcslashes( $alert );
-		$payload = array( 'aps' => array( 'alert' => $alert, 'badge' => '+1' ) );
+		// Include Android and iOS payloads
+		$payload = array( 
+			'aps'     => array( 'alert' => $alert, 'badge' => '+1' ),
+			'android' => array( 'alert' => $alert ) );
+
 		// Add a URL if any, to be handled by apps
-		if ( $url ) 
+		if ( $url ) {
 			$payload['aps']['url'] = $url;
-
-
+			$payload['android']['extra']['url'] = $url;		
+		}
+			
 		if ( $tag === 'broadcast' ) {
 			$response =  $this->request( $this->airship, 'broadcast', $payload );
 		} else {
