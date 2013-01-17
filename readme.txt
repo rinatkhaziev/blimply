@@ -39,6 +39,11 @@ Plugin is maintained on [Github](https://github.com/rinatkhaziev/blimply). Comme
 
 == Changelog ==
 
+= 0.3 = 
+* Now include Android payload as well as iOS
+* Various bugfixes (props @voceconnect, @danielbachhuber )
+
+
 = 0.2.4 =
 
 * Fix potential Fatal Error with dependencies
