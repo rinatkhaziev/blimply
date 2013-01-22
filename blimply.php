@@ -177,7 +177,7 @@ class Blimply {
 		if ( !current_user_can( apply_filters( 'blimply_push_cap', 'edit_posts' ) ) )
 			return;
 		$response = false;
-		$alert = wp_kses( $_POST['blimply_push_alert'], array() );
+		$alert = sanitize_text_field( $_POST['blimply_push_alert'] );
 		$this->_send_broadcast_or_push( $alert, $_POST['blimply_push_tag'] );
 		echo 'ok';
 		exit;
@@ -192,7 +192,7 @@ class Blimply {
 	 */
 	function _send_broadcast_or_push( $alert, $tag, $url = false ) {
 		// Strip escape slashes, otherwise double escaping would happen
-		$alert = stripcslashes( $alert );
+		$alert = html_entity_decode( stripcslashes( strip_tags( $alert ) ) );
 		// Include Android and iOS payloads
 		$payload = array(
 			'aps'     => array( 'alert' => $alert, 'badge' => '+1' ),
