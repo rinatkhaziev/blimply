@@ -152,7 +152,7 @@ class Blimply {
 	 * @param int     $post_id
 	 */
 	function action_save_post( $post_id ) {
-		if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE || false  === wp_is_post_revision( $post_id ) )
+		if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE || wp_is_post_revision( $post_id ) )
 			return;
 		if ( isset( $_POST['blimply_nonce'] ) && !wp_verify_nonce( $_POST['blimply_nonce'], BLIMPLY_FILE_PATH ) )
 			return;
