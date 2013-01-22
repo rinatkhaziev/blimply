@@ -20,6 +20,7 @@ You will need an [Urban Airship](http://urbanairship.com/) account in order to b
 1. Activate the plugin through the 'Plugins' menu in WordPress
 1. Set application key and application MASTER secret in 'Settings' -> 'Blimply Settings'
 1. Add Urban Airship tags (optional)
+1. Keep in mind that tags names will be slugified when added to Urban Airship App. So for proper tag handling in your apps use tag->slug not tag->name when you register tags for device
 1. Set sounds for your tags
 1. Enjoy responsibly
 

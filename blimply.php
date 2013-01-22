@@ -86,14 +86,12 @@ class Blimply {
 		if ( ! in_array( $pagenow, array( 'post-new.php', 'post.php', 'index.php', 'options.php' ) ) && ! defined( 'DOING_AJAX' ) )
 			return;
 
-		$this->options = get_option( 'urban_airship' );
-		if ( !$this->options ) {
-			$this->options = array(
-				'blimply_name' => '',
-				'blimply_app_key' => '',
-				'blimply_app_secret' => ''
-			);
-		}
+		$this->options = get_option( 'urban_airship', array(
+			'blimply_name' => '',
+			'blimply_app_key' => '',
+			'blimply_app_secret' => ''
+		) );
+
 		$this->sounds = get_option( 'blimply_sounds' );
 		$this->airships[ $this->options['blimply_name'] ] = new Airship( $this->options['blimply_app_key'], $this->options['blimply_app_secret'] );
 		// Pass the reference to convenience var
