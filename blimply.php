@@ -195,6 +195,7 @@ class Blimply {
 		$payload = array(
 			'aps'     => array( 'alert' => $alert, 'badge' => '+1' ),
 			'android' => array( 'alert' => $alert ),
+			'blackberry' => array( 'content-type' => 'text/plain', 'body' => $alert ),
 		);
 
 		// Add a URL if any, to be handled by apps
