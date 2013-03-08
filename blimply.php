@@ -4,7 +4,7 @@ Plugin Name: Blimply
 Plugin URI: http://doejo.com
 Description: Blimply allows you to send push notifications to your mobile users utilizing Urban Airship API. It sports a post meta box and a dashboard widgets. You have the ability to broadcast pushes, and to push to specific Urban Airship tags as well.
 Author: Rinat Khaziev, doejo
-Version: 0.3.1
+Version: 0.4-working
 Author URI: http://doejo.com
 
 GNU General Public License, Free Software Foundation <http://creativecommons.org/licenses/GPL/2.0/>
