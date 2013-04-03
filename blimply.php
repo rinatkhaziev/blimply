@@ -186,7 +186,7 @@ class Blimply {
 		$limit = (int) $this->options[ BLIMPLY_PREFIX . '_character_limit' ];
 		if ( $limit )
 			$alert = substr( $alert, 0, $limit );
- 		$this->_send_broadcast_or_push( $alert, $_POST['blimply_push_tag'] );
+		$this->_send_broadcast_or_push( $alert, $_POST['blimply_push_tag'] );
 		echo 'ok';
 		exit;
 	}
