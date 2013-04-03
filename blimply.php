@@ -85,12 +85,17 @@ class Blimply {
 		// Init the plugin only on proper pages and if doing ajax request
 		if ( ! in_array( $pagenow, array( 'post-new.php', 'post.php', 'index.php', 'options.php' ) ) && ! defined( 'DOING_AJAX' ) )
 			return;
-
-		$this->options = get_option( 'urban_airship', array(
-			'blimply_name' => '',
-			'blimply_app_key' => '',
-			'blimply_app_secret' => ''
-		) );
+		$defaults = array(
+			BLIMPLY_PREFIX  . '_name' => '',
+			BLIMPLY_PREFIX  . '_app_key' => '',
+			BLIMPLY_PREFIX . '_app_secret' => '',
+			BLIMPLY_PREFIX . '_character_limit' => 140,
+		);
+		// Try to set default options if option doesn't exist
+		$this->options = get_option( 'urban_airship', $defaults );
+		// Make sure that default options are set properly even if suboption key doesn't exist
+		// e.g. new option was added in a new verion;
+		$this->options = array_merge( $defaults, $this->options );
 
 		$this->sounds = get_option( 'blimply_sounds' );
 		$this->airships[ $this->options['blimply_name'] ] = new Airship( $this->options['blimply_app_key'], $this->options['blimply_app_secret'] );
@@ -116,6 +121,7 @@ class Blimply {
 		wp_localize_script( 'blimply-js', 'Blimply', array(
 				'push_sent' => __( 'Push notification successfully sent', 'blimply' ),
 				'push_error' => __( 'Sorry, there was some error while we were trying to send your push notification. Try again later!', 'blimply' ),
+				'character_limit' => (int) $this->options[ BLIMPLY_PREFIX .'_character_limit' ]
 			)
 		);
 	}
@@ -175,8 +181,12 @@ class Blimply {
 		if ( !current_user_can( apply_filters( 'blimply_push_cap', 'edit_posts' ) ) )
 			return;
 		$response = false;
+		// Truncate to whatever the limit is set (if not 0)
 		$alert = sanitize_text_field( $_POST['blimply_push_alert'] );
-		$this->_send_broadcast_or_push( $alert, $_POST['blimply_push_tag'] );
+		$limit = (int) $this->options[ BLIMPLY_PREFIX . '_character_limit' ];
+		if ( $limit )
+			$alert = substr( $alert, 0, $limit );
+ 		$this->_send_broadcast_or_push( $alert, $_POST['blimply_push_tag'] );
 		echo 'ok';
 		exit;
 	}
@@ -302,12 +312,20 @@ class Blimply {
 	 *
 	 */
 	function dashboard_widget() {
+		$limit = (int) $this->options[BLIMPLY_PREFIX . '_character_limit'];
+		$limit_html = $limit ? 'maxlength="' . $limit . '"' :  '';
 ?>
 		<form name="post" action="<?php echo esc_url( admin_url( 'admin-ajax.php' ) ); ?>" method="post" id="blimply-dashboard-widget">
 			<h4 id="content-label"><label for="content"><?php _e( 'Send Push Notification' ) ?></label></h4>
-			<small><?php _e( 'Keep in mind that all HTML will be stripped out, and refrain from putting any links in the message.', 'blimply' ); ?></small>
+			<small><?php _e( 'Keep in mind that all HTML will be stripped out, and refrain from putting any links in the message.', 'blimply' ); ?></small><br/>
+			<?php if ( $limit ): ?>
+			<small><?php _e( 'Character limit is: ', 'blimply' ); ?><strong><?php echo $limit ?></strong>.</small> <br/>
+			<small><strong><?php _e( 'Characters left: ', 'blimply' ); ?><span class="limit"><?php echo (int) $limit ?></strong></span>.
+			<?php _e( "You won't be able to type more than that.", 'blimply' ); ?>
+			</small>
+			<?php endif; ?>
 			<div class="textarea-wrap">
-				<textarea name="blimply_push_alert" id="content" rows="3" cols="15" tabindex="2" placeholder="Your push message"></textarea>
+				<textarea name="blimply_push_alert" id="content" rows="3" cols="15" tabindex="2" <?php echo $limit_html ?> placeholder="Your push message"></textarea>
 			</div>
 			<h4><label for="tags-input"><?php _e( 'Choose a tag' ) ?></label></h4>
 <?php
