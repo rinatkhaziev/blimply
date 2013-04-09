@@ -201,7 +201,9 @@ class Blimply {
 		$limit = (int) $this->options[ BLIMPLY_PREFIX . '_character_limit' ];
 		if ( $limit )
 			$alert = substr( $alert, 0, $limit );
-		$this->_send_broadcast_or_push( $alert, $_POST['blimply_push_tag'] );
+		// Determine if sounds are disabled for the push
+		$no_sound = isset( $_POST['blimply_no_sound'] ) && $_POST['blimply_no_sound'];
+		$this->_send_broadcast_or_push( $alert, $_POST['blimply_push_tag'], false, $no_sound );
 		echo 'ok';
 		exit;
 	}
@@ -213,7 +215,7 @@ class Blimply {
 	 * @param string  $tag
 	 *
 	 */
-	function _send_broadcast_or_push( $alert, $tag, $url = false ) {
+	function _send_broadcast_or_push( $alert, $tag, $url = false, $disable_sound = false ) {
 		// Strip escape slashes, otherwise double escaping would happen
 		$alert = html_entity_decode( stripcslashes( strip_tags( $alert ) ) );
 		// Include Android and iOS payloads
@@ -232,13 +234,15 @@ class Blimply {
 		if ( $tag === 'broadcast' ) {
 			$response =  $this->request( $this->airship, 'broadcast', $payload );
 		} else {
-			// Adding tags field to payload, no problem.
-			if ( isset( $this->sounds["blimply_sound_{$tag}"] ) && !empty( $this->sounds["blimply_sound_{$tag}"] ) )
+			// Set a sound for the specific tag
+			if ( !$disable_sound && isset( $this->sounds["blimply_sound_{$tag}"] ) && !empty( $this->sounds["blimply_sound_{$tag}"] ) )
 				$payload['aps']['sound'] = $this->sounds["blimply_sound_{$tag}"];
-			else
+			// Or use the default sound
+			elseif ( !$disable_sound )
 				$payload['aps']['sound'] = 'default';
 
 			$payload['tags'] = array( $tag );
+
 			$response = $this->request( $this->airship, 'push', $payload );
 		}
 	}
