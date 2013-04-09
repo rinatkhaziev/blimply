@@ -92,7 +92,7 @@ class Blimply_Settings {
                 ),
                 array(
                     'name' => BLIMPLY_PREFIX . '_enable_quiet_time',
-                    'label'=> __( 'Enable quite time', 'blimply' ),
+                    'label'=> __( 'Enable quiet time', 'blimply' ),
                     'desc'=> __( '', 'blimply' ),
                     'type'=> 'checkbox',
                     'std' => 140,
