@@ -284,6 +284,11 @@ class Blimply {
 				echo '</label><br/>';
 			}
 
+			echo '<br/><label class="selectit" for="blimply_no_sound" style="margin-left: 4px">';
+			echo '<input type="checkbox" style="float:left" name="blimply_no_sound" id="blimply_no_sound" value="1" '. checked( $this->_is_quiet_time(), true, false ) . ' />';
+			_e( 'Turn the sound off', 'blimply' );
+			echo '</label><br/>';
+
 			echo '<br/><input type="hidden" id="" name="blimply_push" value="0" />';
 			echo '<input type="checkbox" id="blimply_push" name="blimply_push" value="1" disabled="disabled" />';
 			echo '<label for="blimply_push">';
@@ -357,6 +362,13 @@ class Blimply {
 			_e( 'Broadcast (send to all tags)', 'blimply' );
 			echo '</label><br/>';
 		}
+		?>
+		<br/>
+		<h4><label for="blimply_no_sound"><?php _e( 'Turn the sound off' ) ?></label></h4> <?php
+		echo '<label class="selectit" for="blimply_no_sound" style="margin-left: 4px">';
+		echo '<input type="checkbox" style="float:left" name="blimply_no_sound" id="blimply_no_sound" value="1" '. checked( $this->_is_quiet_time(), true, false ) . ' />';
+		_e( 'Turn the sound off', 'blimply' );
+		echo '</label><br/>';
 ?>
 			<p class="submit">
 				<input type="hidden" name="action" id="blimply-push-action" value="blimply-send-push" />
