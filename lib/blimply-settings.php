@@ -100,19 +100,19 @@ class Blimply_Settings {
                 ),
                 array(
                     'name' => BLIMPLY_PREFIX . '_quiet_time_from',
-                    'label'=> __( 'Quite time from (24h format)', 'blimply' ),
+                    'label'=> __( 'Quiet time from (24h format)', 'blimply' ),
                     'desc'=> __( '', 'blimply' ),
                     'type'=> 'text',
-                    'std' => 23,
-                    'class'=> 'nohtml',
+                    'std' => "23:00",
+                    'class'=> 'nohtml blimply-timepicker',
                 ),
                 array(
                     'name' => BLIMPLY_PREFIX . '_quiet_time_to',
-                    'label'=> __( 'Quite time to (24h format)', 'blimply' ),
+                    'label'=> __( 'Quiet time to (24h format)', 'blimply' ),
                     'desc'=> __( '', 'blimply' ),
                     'type'=> 'text',
-                    'std' => 7,
-                    'class'=> 'nohtml',
+                    'std' => "7:00",
+                    'class'=> 'nohtml blimply-timepicker',
                 ),
             )
         );

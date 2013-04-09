@@ -108,16 +108,31 @@ class Blimply {
 	}
 
 	/**
+	 * Helper function to determine if current time should be quiet time (no push sounds)
+	 * @return boolean [description]
+	 */
+	function _is_quiet_time() {
+		$current_time = date( "G:i", current_time( 'timestamp' ) );
+		$quiet_from = $this->options[BLIMPLY_PREFIX . '_quiet_time_from'];
+		$quiet_to = $this->options[BLIMPLY_PREFIX . '_quiet_time_to'];
+		$quiet_to_array = explode( ":", $quiet_to );
+		$is_quiet_from = $quiet_from < $current_time;
+		$is_quiet_to = ( $quiet_to >  $current_time && $quiet_to_array[0] > 12 ) || ( $quiet_to < $current_time && $quiet_to_array[0] < 12 );
+		return $is_quiet_from && $is_quiet_to && 'on' === $this->options[BLIMPLY_PREFIX . '_enable_quiet_time'];
+	}
+
+	/**
 	 * Register scripts and styles
 	 *
 	 */
 	function register_scripts_and_styles() {
 		global $pagenow;
 		// Only load this on the proper page
-		if ( ! in_array( $pagenow, array( 'post-new.php', 'post.php', 'index.php' ) ) )
+		if ( ! in_array( $pagenow, array( 'post-new.php', 'post.php', 'index.php', 'options-general.php' ) ) )
 			return;
 		wp_enqueue_style( 'blimply-style', BLIMPLY_URL . '/lib/css/blimply.css' );
-		wp_enqueue_script( 'blimply-js', BLIMPLY_URL . '/lib/js/blimply.js', array( 'jquery' )  );
+		wp_enqueue_script( 'timepicker', BLIMPLY_URL . '/lib/js/jquery.timePicker.min.js', array( 'jquery' ) );
+		wp_enqueue_script( 'blimply-js', BLIMPLY_URL . '/lib/js/blimply.js', array( 'jquery', 'timepicker' ) );
 		wp_localize_script( 'blimply-js', 'Blimply', array(
 				'push_sent' => __( 'Push notification successfully sent', 'blimply' ),
 				'push_error' => __( 'Sorry, there was some error while we were trying to send your push notification. Try again later!', 'blimply' ),
