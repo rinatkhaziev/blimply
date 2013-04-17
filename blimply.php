@@ -244,6 +244,8 @@ class Blimply {
 
 			$payload['tags'] = array( $tag );
 
+			// Payload filter (allows to workaround quirks of UA API if any)
+			$payload = apply_filters( 'blimply_payload_override', $payload );
 			$response = $this->request( $this->airship, 'push', $payload );
 		}
 	}
