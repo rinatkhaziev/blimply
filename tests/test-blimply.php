@@ -27,6 +27,10 @@ class Blimply_UnitTestCase extends WP_UnitTestCase {
 		$this->assertInternalType( 'array', $this->blimply->options );
 	}
 
+	function test_airship_init() {
+		$this->assertInstanceOf( 'Airship', $this->blimply->airship );
+	}
+
 	// Check if errors are handled properly
 	function test_error_handling() {
 

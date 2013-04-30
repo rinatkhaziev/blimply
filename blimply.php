@@ -37,8 +37,8 @@ require_once BLIMPLY_ROOT . '/lib/settings-api-class/class.settings-api.php';
 require_once BLIMPLY_ROOT . '/lib/blimply-settings.php';
 
 class Blimply {
-	public $options;
-	protected $airships, $airship, $tags;
+	
+	public $options, $airships, $airship, $tags;
 	/**
 	 * Instantiate
 	 */
