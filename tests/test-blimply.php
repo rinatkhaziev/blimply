@@ -23,7 +23,6 @@ class Blimply_UnitTestCase extends WP_UnitTestCase {
 
 	// Check if settings get set up on activation
 	function test_default_settings() {
-		var_dump( $this->blimply );
 		$this->assertNotEmpty( $this->blimply->options );
 		$this->assertInternalType( 'array', $this->blimply->options );
 	}
