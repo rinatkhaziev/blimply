@@ -37,7 +37,7 @@ require_once BLIMPLY_ROOT . '/lib/settings-api-class/class.settings-api.php';
 require_once BLIMPLY_ROOT . '/lib/blimply-settings.php';
 
 class Blimply {
-	
+
 	public $options, $airships, $airship, $tags;
 	/**
 	 * Instantiate
@@ -90,6 +90,9 @@ class Blimply {
 			BLIMPLY_PREFIX  . '_app_key' => '',
 			BLIMPLY_PREFIX . '_app_secret' => '',
 			BLIMPLY_PREFIX . '_character_limit' => 140,
+			BLIMPLY_PREFIX . '_quiet_time_from' => '',
+			BLIMPLY_PREFIX . '_quiet_time_to' => '',
+			BLIMPLY_PREFIX . '_enable_quiet_time' => ''
 		);
 		// Try to set default options if option doesn't exist
 		$this->options = get_option( 'urban_airship', $defaults );
