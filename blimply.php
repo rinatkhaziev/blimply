@@ -259,7 +259,8 @@ class Blimply {
 	 * @todo implement ability to actually pick specific post types
 	 */
 	function post_meta_boxes() {
-		$post_types = get_post_types( array( 'public' => true ), 'objects' );
+		// Enable meta box for all public post types by default but allow to override with filters
+		$post_types = apply_filters( 'blimply_enabled_post_types', get_post_types( array( 'public' => true ), 'objects' ) );
 		foreach ( $post_types as $post_type => $props )
 			add_meta_box( BLIMPLY_PREFIX, __( 'Push Notification', 'blimply' ), array( $this, 'post_meta_box' ), $post_type, 'side' );
 	}
