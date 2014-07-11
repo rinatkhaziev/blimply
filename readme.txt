@@ -3,7 +3,7 @@ Contributors: rinatkhaziev
 Tags: push, urban airship, notifications, widget, iphone, android, blackberry, ios
 Requires at least: 3.3
 Tested up to: 3.9.1
-Stable tag: 0.4
+Stable tag: 0.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
