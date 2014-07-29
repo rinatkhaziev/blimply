@@ -278,13 +278,16 @@ class Blimply {
 			echo '<label for="blimply_push_alert">';
 			_e( 'Push message', 'blimply' );
 			$nice_warning = __( 'Keep in mind that all HTML will be stripped out, and refrain from putting any links in the message.', 'blimply' );
-			echo "</label><br/><small>{$nice_warning}</small><br/>";
-			echo '<textarea id="blimply_push_alert" name="blimply_push_alert" class="bl_textarea">' . $post->post_title . '</textarea><br/>';
+			// 0 means no limit
+			$limit = (int) apply_filters( BLIMPLY_PREFIX . '_character_limit', $this->options[BLIMPLY_PREFIX . '_character_limit'] );
+			$limit_html = $limit ? sprintf( ' maxlength="%d" ', $limit ) :  '';
+			echo "</label><br/><small>{$nice_warning} Character limit is: {$limit}</small><br/>";
+			echo '<textarea id="blimply_push_alert" name="blimply_push_alert" class="bl_textarea"' . $limit_html . '>' . esc_html( $post->post_title ) . '</textarea><br/>';
 			echo '<strong>' . __( 'Send Push to following Urban Airship tags', 'blimply' ) . '</strong>';
 			foreach ( (array) $this->tags as $tag ) {
-				echo '<input type="radio" name="blimply_push_tag" id="blimply_tag_' .$tag->term_id . '" value="' . $tag->slug . '"/>';
-				echo '<label class="selectit" for="blimply_tag_' .$tag->term_id . '" style="margin-left: 4px">';
-				echo $tag->name;
+				echo '<input type="radio" name="blimply_push_tag" id="blimply_tag_' . esc_attr( $tag->term_id ) . '" value="' . esc_attr( $tag->slug ) . '"/>';
+				echo '<label class="selectit" for="blimply_tag_' . esc_attr( $tag->term_id ) . '" style="margin-left: 4px">';
+				echo esc_html( $tag->name );
 				echo '</label><br/>';
 			}
 
@@ -343,14 +346,14 @@ class Blimply {
 	 *
 	 */
 	function dashboard_widget() {
-		$limit = (int) $this->options[BLIMPLY_PREFIX . '_character_limit'];
-		$limit_html = $limit ? 'maxlength="' . $limit . '"' :  '';
+		$limit = (int) apply_filters( BLIMPLY_PREFIX . '_character_limit', $this->options[BLIMPLY_PREFIX . '_character_limit'] );
+		$limit_html = $limit ? sprintf( ' maxlength="%d" ', $limit ) :  '';
 ?>
 		<form name="post" action="<?php echo esc_url( admin_url( 'admin-ajax.php' ) ); ?>" method="post" id="blimply-dashboard-widget">
 			<h4 id="content-label"><label for="content"><?php _e( 'Send Push Notification' ) ?></label></h4>
 			<small><?php _e( 'Keep in mind that all HTML will be stripped out, and refrain from putting any links in the message.', 'blimply' ); ?></small><br/>
 			<?php if ( $limit ): ?>
-			<small><?php _e( 'Character limit is: ', 'blimply' ); ?><strong><?php echo $limit ?></strong>.</small> <br/>
+			<small><?php _e( 'Character limit is: ', 'blimply' ); ?><strong><?php echo (int) $limit ?></strong>.</small> <br/>
 			<small><strong><?php _e( 'Characters left: ', 'blimply' ); ?><span class="limit"><?php echo (int) $limit ?></strong></span>.
 			<?php _e( "You won't be able to type more than that.", 'blimply' ); ?>
 			</small>
@@ -361,8 +364,8 @@ class Blimply {
 			<h4><label for="tags-input"><?php _e( 'Choose a tag' ) ?></label></h4>
 <?php
 		foreach ( (array) $this->tags as $tag ) {
-			echo '<label class="float-left f-left selectit" for="blimply_tag_' .$tag->term_id . '" style="margin-left: 4px">';
-			echo '<input type="radio" class="float-left f-left" style="float:left" name="blimply_push_tag" id="blimply_tag_' .$tag->term_id . '" value="' . $tag->slug . '"/>';
+			echo '<label class="float-left f-left selectit" for="blimply_tag_' . esc_attr( $tag->term_id ) . '" style="margin-left: 4px">';
+			echo '<input type="radio" class="float-left f-left" style="float:left" name="blimply_push_tag" id="blimply_tag_' . esc_attr( $tag->term_id ) . '" value="' . esc_attr( $tag->slug ) . '"/>';
 			echo $tag->name;
 			echo '</label><br/>';
 		}
