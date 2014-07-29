@@ -40,6 +40,9 @@ Plugin is maintained on [Github](https://github.com/rinatkhaziev/blimply). Comme
 
 == Changelog ==
 
+= 0.5.1 =
+* Implemented character limit for post meta box
+
 = 0.5 =
 * Added 'blimply_enabled_post_types' filter to enable/disable meta box per post type
 
