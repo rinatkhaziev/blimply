@@ -1,6 +1,6 @@
 {
     "name": "rinatkhaziev/blimply",
-    "type": "library",
+    "type": "wordpress-plugin",
     "description": "Urban Airship Plugin for WordPress",
     "homepage": "http://docs.urbanairship.com/reference/libraries/php/",
     "license": "GPL v2+",
@@ -13,11 +13,17 @@
         }
     ],
     "require":{
-        "urbanairship/urbanairship": "0.1.3"
+        "urbanairship/urbanairship": "~0.1.3",
+        "composer/installers": "~1.0"
     },
     "require-dev": {
         "urbanairship/urbanairship": "dev-master",
         "phpunit/phpunit": "3.7.*",
         "phpdocumentor/phpdocumentor": "2.*"
+    },
+    "extra": {
+        "installer-paths": {
+            "lib/{$name}/": ["urbanairship/urbanairship"]
+        }
     }
 }
