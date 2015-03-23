@@ -251,6 +251,8 @@ class Blimply {
 			$payload = apply_filters( 'blimply_payload_override', $payload );
 			$response = $this->request( $this->airship, 'push', $payload );
 		}
+
+		return $response;
 	}
 
 	/**
@@ -332,12 +334,14 @@ class Blimply {
 				return $response;
 			} catch ( Exception $e ) {
 				$exception_class = get_class( $e );
+
+				return new WP_Error( 'Request Failed' );
 				if ( is_admin() ) {
 					// @todo implement admin notification of misconfiguration
 				}
 			}
 		} else {
-			// @todo illegal request
+			return new WP_Error( 405, 'Illegal request method' );
 		}
 	}
 
