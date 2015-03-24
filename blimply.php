@@ -128,6 +128,7 @@ class Blimply {
 
 	/**
 	 * Helper function to determine if current time should be quiet time (no push sounds)
+	 *
 	 * @return boolean [description]
 	 */
 	function _is_quiet_time() {
@@ -275,7 +276,7 @@ class Blimply {
 		$payload = apply_filters( 'blimply_payload_override', P\notification( $alert, array( 'ios' => $ios, 'android' => $android ) ) );
 
 		$response->setNotification( $payload )
-		  ->setDeviceTypes( P\all )
+		->setDeviceTypes( P\all )
 		;
 
 		do_action( 'blimply_before_send_push', $payload );
@@ -414,7 +415,7 @@ class Blimply {
 			esc_html_e( 'Broadcast (send to all tags)', 'blimply' );
 			echo '</label><br/>';
 		}
-		?>
+?>
 		<br/>
 		<h4><label for="blimply_no_sound"><?php esc_html_e( 'Turn the sound off' ) ?></label></h4> <?php
 		echo '<label class="selectit" for="blimply_no_sound" style="margin-left: 4px">';
