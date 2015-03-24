@@ -32,9 +32,20 @@ define( 'BLIMPLY_URL' , plugins_url( '/', __FILE__ ) );
 define( 'BLIMPLY_PREFIX' , 'blimply' );
 
 // Bootstrap
-require_once BLIMPLY_ROOT . '/lib/wp-urban-airship/urbanairship.php';
+// require_once BLIMPLY_ROOT . '/lib/wp-urban-airship/urbanairship.php';
 require_once BLIMPLY_ROOT . '/lib/settings-api-class/class.settings-api.php';
 require_once BLIMPLY_ROOT . '/lib/blimply-settings.php';
+
+// Composer autoload
+require_once BLIMPLY_ROOT . '/vendor/autoload.php';
+
+
+use UrbanAirship\Airship;
+use UrbanAirship\UALog;
+use UrbanAirship\Push as P;
+use Monolog\Logger;
+use Monolog\Handler\StreamHandler;
+use Monolog\Handler\NullHandler;
 
 class Blimply {
 
@@ -108,6 +119,11 @@ class Blimply {
 		$this->airship = &$this->airships[ $this->options['blimply_name'] ];
 		// We don't use built-in WP UI, instead we choose tag in custom Blimply meta box
 		$this->tags = get_terms( 'blimply_tags', array( 'hide_empty' => 0 ) );
+
+		if ( ! defined( 'WP_DEBUG' ) || ! WP_DEBUG ) {
+			// Bust logging, not allowed on wp.com
+			UALog::setLogHandlers( array( new NullHandler ) );
+		}
 	}
 
 	/**
@@ -223,34 +239,55 @@ class Blimply {
 		// Strip escape slashes, otherwise double escaping would happen
 		$alert = html_entity_decode( stripcslashes( strip_tags( $alert ) ) );
 		// Include Android and iOS payloads
-		$payload = array(
-			'aps'     => array( 'alert' => $alert, 'badge' => '+1' ),
-			'android' => array( 'alert' => $alert ),
-			'blackberry' => array( 'content-type' => 'text/plain', 'body' => $alert ),
-		);
+		// $payload = array(
+		// 	'aps'     => array( 'alert' => $alert, 'badge' => '+1' ),
+		// 	'android' => array( 'alert' => $alert ),
+		// 	'blackberry' => array( 'content-type' => 'text/plain', 'body' => $alert ),
+		// );
 
-		// Add a URL if any, to be handled by apps
-		if ( $url ) {
-			$payload['aps']['url'] = $url;
-			$payload['android']['extra']['url'] = $url;
-		}
+		// // Add a URL if any, to be handled by apps
+		// if ( $url ) {
+		// 	$payload['aps']['url'] = $url;
+		// 	$payload['android']['extra']['url'] = $url;
+		// }
 
-		if ( $tag === 'broadcast' ) {
-			$response =  $this->request( $this->airship, 'broadcast', $payload );
-		} else {
-			// Set a sound for the specific tag
-			if ( !$disable_sound && isset( $this->sounds["blimply_sound_{$tag}"] ) && !empty( $this->sounds["blimply_sound_{$tag}"] ) )
-				$payload['aps']['sound'] = $this->sounds["blimply_sound_{$tag}"];
-			// Or use the default sound
-			elseif ( !$disable_sound )
-				$payload['aps']['sound'] = 'default';
+		// if ( $tag === 'broadcast' ) {
+		// 	$response =  $this->request( $this->airship, 'broadcast', $payload );
+		// } else {
+		// 	// Set a sound for the specific tag
+		// 	if ( !$disable_sound && isset( $this->sounds["blimply_sound_{$tag}"] ) && !empty( $this->sounds["blimply_sound_{$tag}"] ) )
+		// 		$payload['aps']['sound'] = $this->sounds["blimply_sound_{$tag}"];
+		// 	// Or use the default sound
+		// 	elseif ( !$disable_sound )
+		// 		$payload['aps']['sound'] = 'default';
 
-			$payload['tags'] = array( $tag );
+		// 	$payload['tags'] = array( $tag );
 
-			// Payload filter (allows to workaround quirks of UA API if any)
-			$payload = apply_filters( 'blimply_payload_override', $payload );
-			$response = $this->request( $this->airship, 'push', $payload );
-		}
+		// 	// Payload filter (allows to workaround quirks of UA API if any)
+		// 	$payload = apply_filters( 'blimply_payload_override', $payload );
+		// 	$response = $this->request( $this->airship, 'push', $payload );
+		// }
+
+		// Grab an instance of PushRequest
+		$response = $this->airship->push();
+
+		// If tag is broadcast use Push\all const, otherwise set audience to tag
+		$audience = $tag == 'broadcast' ? P\all : P\tag( $tag );
+		$response->setAudience( $audience );
+
+		// TODO: sounds/badges
+		$ios = P\ios( $alert, 100, 'default' );
+
+		// extra can't be empty, pass null if no extra args
+		$android = P\android( $alert, null, null, null, /*array( 'url' => 'http://goo.gl' )*/ null );
+
+		$response->setNotification( P\notification( $alert, array( 'ios' => $ios, 'android' => $android ) ) )
+		    ->setDeviceTypes( P\all )
+		    ;
+
+		// var_dump( $response );
+
+		$response->send();
 
 		return $response;
 	}

@@ -4,6 +4,16 @@
  * Test case for Drop It
  *
  */
+// Composer autoload
+require_once BLIMPLY_ROOT . '/vendor/autoload.php';
+
+use UrbanAirship\Airship;
+use UrbanAirship\UALog;
+use UrbanAirship\Push as P;
+use Monolog\Logger;
+use Monolog\Handler\StreamHandler;
+use Monolog\Handler\NullHandler;
+
 class Blimply_UnitTestCase extends WP_UnitTestCase {
 	public $blimply;
 
@@ -30,7 +40,7 @@ class Blimply_UnitTestCase extends WP_UnitTestCase {
 	}
 
 	function test_airship_init() {
-		$this->assertInstanceOf( 'Airship', $this->blimply->airship );
+		$this->assertInstanceOf( 'UrbanAirship\Airship', $this->blimply->airship );
 	}
 
 	// Check if errors are handled properly
@@ -64,6 +74,12 @@ class Blimply_UnitTestCase extends WP_UnitTestCase {
 
 	function test_successful_broadcast() {
 		$response = $this->blimply->_send_broadcast_or_push( 'My valid test message! From ' . home_url('/'), 'broadcast' );
+
+		$this->assertFalse( is_wp_error( $response ) );
+	}
+
+	function test_successful_push_to_tag() {
+		$response = $this->blimply->_send_broadcast_or_push( 'My valid test message! From ' . home_url('/'), 'news' );
 
 		$this->assertFalse( is_wp_error( $response ) );
 	}
