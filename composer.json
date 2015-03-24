@@ -22,5 +22,8 @@
         "phpdocumentor/phpdocumentor": "2.*"
     },
     "minimum-stability": "beta",
-    "prefer-stable": true
+    "prefer-stable": true,
+    "config": {
+			"optimize-autoloader": true
+		}
 }
