@@ -276,7 +276,9 @@ class Blimply {
 
 		$response->setNotification( $payload )
 		  ->setDeviceTypes( P\all )
-		    ;
+		;
+
+		do_action( 'blimply_before_send_push', $payload );
 
 		try {
 			$response->send();
