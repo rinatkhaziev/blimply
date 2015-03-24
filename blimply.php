@@ -201,8 +201,10 @@ class Blimply {
 
 		if ( isset( $_POST['blimply_push'] ) && 1 == $_POST['blimply_push'] ) {
 			$alert = !empty( $_POST['blimply_push_alert'] ) ? sanitize_text_field( $_POST['blimply_push_alert'] ) : sanitize_text_field( $_POST['post_title'] );
-			$this->_send_broadcast_or_push( $alert, $_POST['blimply_push_tag'], get_permalink( $post_id ), (bool) isset( $_POST['blimply_no_sound'] ) && $_POST['blimply_no_sound'] );
-			update_post_meta( $post_id, 'blimply_push_sent', true );
+			$response = $this->_send_broadcast_or_push( $alert, $_POST['blimply_push_tag'], get_permalink( $post_id ), (bool) isset( $_POST['blimply_no_sound'] ) && $_POST['blimply_no_sound'] );
+
+			if ( ! is_wp_error( $response ) )
+				update_post_meta( $post_id, 'blimply_push_sent', true );
 		}
 	}
 
