@@ -353,34 +353,6 @@ class Blimply {
 	}
 
 	/**
-	 * Wrapper to make a remote request to Urban Airship
-	 *
-	 * @param Airship $airship an instance of Airship passed by reference
-	 * @param string  $method
-	 * @param mixed   $args
-	 * @param mixed   $tokens
-	 * @return mixed response or Exception or error
-	 */
-	function request( Airship &$airship, $method = '', $args = array(), $tokens = array() ) {
-		if ( in_array( $method, array( 'register', 'deregister', 'feedback', 'push', 'broadcast' ) ) ) {
-			$args = apply_filters( "blimply_{$method}_args", $args, $airship, $tokens );
-			try {
-				$response = $airship->$method( $args, $tokens );
-				return $response;
-			} catch ( Exception $e ) {
-				$exception_class = get_class( $e );
-
-				return new WP_Error( 'Request Failed' );
-				if ( is_admin() ) {
-					// @todo implement admin notification of misconfiguration
-				}
-			}
-		} else {
-			return new WP_Error( 405, 'Illegal request method' );
-		}
-	}
-
-	/**
 	 * Dashboard widget
 	 *
 	 */
