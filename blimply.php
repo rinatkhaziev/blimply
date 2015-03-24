@@ -55,7 +55,7 @@ class Blimply {
 	 */
 	function __construct() {
 		add_action( 'admin_init', array( $this, 'action_admin_init' ) );
-		add_action( 'save_post', array( $this, 'action_save_post' ) );
+		add_action( 'save_post', array( $this, 'action_save_post' ), 50 );
 		add_action( 'add_meta_boxes', array( $this, 'post_meta_boxes' ) );
 		add_action( 'update_option_blimply_options', array( $this, 'sync_airship_tags' ), 5, 2 );
 		add_action( 'register_taxonomy', array( $this, 'after_register_taxonomy' ), 5, 3 );
