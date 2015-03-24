@@ -238,35 +238,6 @@ class Blimply {
 	function _send_broadcast_or_push( $alert, $tag, $url = false, $disable_sound = false ) {
 		// Strip escape slashes, otherwise double escaping would happen
 		$alert = html_entity_decode( stripcslashes( strip_tags( $alert ) ) );
-		// Include Android and iOS payloads
-		// $payload = array(
-		// 	'aps'     => array( 'alert' => $alert, 'badge' => '+1' ),
-		// 	'android' => array( 'alert' => $alert ),
-		// 	'blackberry' => array( 'content-type' => 'text/plain', 'body' => $alert ),
-		// );
-
-		// // Add a URL if any, to be handled by apps
-		// if ( $url ) {
-		// 	$payload['aps']['url'] = $url;
-		// 	$payload['android']['extra']['url'] = $url;
-		// }
-
-		// if ( $tag === 'broadcast' ) {
-		// 	$response =  $this->request( $this->airship, 'broadcast', $payload );
-		// } else {
-		// 	// Set a sound for the specific tag
-		// 	if ( !$disable_sound && isset( $this->sounds["blimply_sound_{$tag}"] ) && !empty( $this->sounds["blimply_sound_{$tag}"] ) )
-		// 		$payload['aps']['sound'] = $this->sounds["blimply_sound_{$tag}"];
-		// 	// Or use the default sound
-		// 	elseif ( !$disable_sound )
-		// 		$payload['aps']['sound'] = 'default';
-
-		// 	$payload['tags'] = array( $tag );
-
-		// 	// Payload filter (allows to workaround quirks of UA API if any)
-		// 	$payload = apply_filters( 'blimply_payload_override', $payload );
-		// 	$response = $this->request( $this->airship, 'push', $payload );
-		// }
 
 		// Grab an instance of PushRequest
 		$response = $this->airship->push();
@@ -275,17 +246,30 @@ class Blimply {
 		$audience = $tag == 'broadcast' ? P\all : P\tag( $tag );
 		$response->setAudience( $audience );
 
+		// Sound part of ios push
+		if ( !$disable_sound && isset( $this->sounds["blimply_sound_{$tag}"] ) && !empty( $this->sounds["blimply_sound_{$tag}"] ) )
+			$sound  = $this->sounds["blimply_sound_{$tag}"];
+		// Or use the default sound
+		elseif ( !$disable_sound )
+			$sound = 'default';
+		else
+			$sound = null;
+
+		// Set extra payload arguments, for now it's just the url
+		$extra = $url ? array( 'url' => $url ) : null;
+
 		// TODO: sounds/badges
-		$ios = P\ios( $alert, 100, 'default' );
+		$ios = P\ios( $alert, '+1', $sound, false, $extra );
 
 		// extra can't be empty, pass null if no extra args
-		$android = P\android( $alert, null, null, null, /*array( 'url' => 'http://goo.gl' )*/ null );
+		$android = P\android( $alert, null, null, null, $extra );
 
-		$response->setNotification( P\notification( $alert, array( 'ios' => $ios, 'android' => $android ) ) )
-		    ->setDeviceTypes( P\all )
+		// Payload filter (allows to workaround quirks of UA API if any and/or fine tuning of payload data)
+		$payload = apply_filters( 'blimply_payload_override', P\notification( $alert, array( 'ios' => $ios, 'android' => $android ) ) );
+
+		$response->setNotification( $payload )
+		  ->setDeviceTypes( P\all )
 		    ;
-
-		// var_dump( $response );
 
 		$response->send();
 
