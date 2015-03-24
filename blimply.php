@@ -271,7 +271,11 @@ class Blimply {
 		  ->setDeviceTypes( P\all )
 		    ;
 
-		$response->send();
+		try {
+			$response->send();
+		} catch ( \Exception $e ) {
+			return new WP_Error( $e->getCode(), $e->getMessage() );
+		}
 
 		return $response;
 	}

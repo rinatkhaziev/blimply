@@ -96,9 +96,11 @@ class Blimply_UnitTestCase extends WP_UnitTestCase {
 		$this->assertFalse( is_wp_error( $response ) );
 	}
 
-	function test_illegal_request_method() {
-		$response = $this->blimply->request( $this->blimply->airship, 'illegal', array() );
-		$this->assertEquals( 405, $response->get_error_code() );
+	function test_catch_bad_request() {
+		add_filter( 'blimply_payload_override', function( $payload ) { return array( 'malformed payload' ); } );
+		$bad_payload_response = $this->blimply->_send_broadcast_or_push( 'My valid test message with url and no sound! From ' . home_url('/'), 'broadcast', home_url( '/' ), true );
+		// $response = $this->
+		$this->assertTrue( is_wp_error( $bad_payload_response ) );
 	}
 
 }
