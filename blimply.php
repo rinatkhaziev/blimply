@@ -228,9 +228,9 @@ class Blimply {
 		// Determine if sounds are disabled for the push
 		$no_sound = isset( $_POST['blimply_no_sound'] ) && $_POST['blimply_no_sound'];
 
-		$this->_send_broadcast_or_push( $alert, $_POST['blimply_push_tag'], false, (bool) $no_sound );
-		echo 'ok';
-		exit;
+		$response = $this->_send_broadcast_or_push( $alert, $_POST['blimply_push_tag'], false, (bool) $no_sound );
+
+		wp_send_json( array( 'success' => !is_wp_error( $response ) ) );
 	}
 
 	/**
@@ -263,11 +263,11 @@ class Blimply {
 		// Set extra payload arguments, for now it's just the url
 		$extra = $url ? array( 'url' => $url ) : null;
 
-		// TODO: sounds/badges
+		// iOS and Android specific parts of payload
 		$ios = P\ios( $alert, '+1', $sound, false, $extra );
-
-		// extra can't be empty, pass null if no extra args
 		$android = P\android( $alert, null, null, null, $extra );
+
+		// TODO: Windows and Blackberry payloads (HA!)
 
 		// Payload filter (allows to workaround quirks of UA API if any and/or fine tuning of payload data)
 		$payload = apply_filters( 'blimply_payload_override', P\notification( $alert, array( 'ios' => $ios, 'android' => $android ) ) );
@@ -358,6 +358,7 @@ class Blimply {
 		$limit_html = $limit ? sprintf( ' maxlength="%d" ', $limit ) :  '';
 ?>
 		<form name="post" action="<?php echo esc_url( admin_url( 'admin-ajax.php' ) ); ?>" method="post" id="blimply-dashboard-widget">
+		<fieldset>
 			<h4 id="content-label"><label for="content"><?php esc_html_e( 'Send Push Notification' ) ?></label></h4>
 			<small><?php esc_html_e( 'Keep in mind that all HTML will be stripped out, and refrain from putting any links in the message.', 'blimply' ); ?></small><br/>
 			<?php if ( $limit ): ?>
@@ -373,14 +374,14 @@ class Blimply {
 <?php
 		foreach ( (array) $this->tags as $tag ) {
 			echo '<label class="float-left f-left selectit" for="blimply_tag_' . esc_attr( $tag->term_id ) . '" style="margin-left: 4px">';
-			echo '<input type="radio" class="float-left f-left" style="float:left" name="blimply_push_tag" id="blimply_tag_' . esc_attr( $tag->term_id ) . '" value="' . esc_attr( $tag->slug ) . '"/>';
+			echo '<input type="radio" class="float-left f-left" name="blimply_push_tag" id="blimply_tag_' . esc_attr( $tag->term_id ) . '" value="' . esc_attr( $tag->slug ) . '"/>';
 			echo $tag->name;
 			echo '</label><br/>';
 		}
 
 		if ( isset( $this->options['blimply_allow_broadcast'] ) && $this->options['blimply_allow_broadcast'] == 'on' ) {
 			echo '<label class="selectit" for="blimply_tag_broadcast" style="margin-left: 4px">';
-			echo '<input type="radio" style="float:left" name="blimply_push_tag" id="blimply_tag_broadcast" value="broadcast"/>';
+			echo '<input type="radio" name="blimply_push_tag" id="blimply_tag_broadcast" value="broadcast"/>';
 			esc_html_e( 'Broadcast (send to all tags)', 'blimply' );
 			echo '</label><br/>';
 		}
@@ -388,7 +389,7 @@ class Blimply {
 		<br/>
 		<h4><label for="blimply_no_sound"><?php esc_html_e( 'Turn the sound off' ) ?></label></h4> <?php
 		echo '<label class="selectit" for="blimply_no_sound" style="margin-left: 4px">';
-		echo '<input type="checkbox" style="float:left" name="blimply_no_sound" id="blimply_no_sound" value="1" '. checked( $this->_is_quiet_time(), true, false ) . ' />';
+		echo '<input type="checkbox" name="blimply_no_sound" id="blimply_no_sound" value="1" '. checked( $this->_is_quiet_time(), true, false ) . ' />';
 		esc_html_e( 'Turn the sound off', 'blimply' );
 		echo '</label><br/>';
 ?>
@@ -400,12 +401,13 @@ class Blimply {
 					<?php
 		if ( current_user_can( apply_filters( 'blimply_push_cap', 'publish_posts' ) ) ):
 ?>
-					<input type="submit" name="publish" disabled="disabled" id="blimply_push_send" accesskey="p" tabindex="5" class="button-primary" value="<?php  esc_attr_e( 'Send push notification' ) ?>" />
+					<input type="submit" name="publish" disabled="disabled" id="blimply_push_send" accesskey="p" tabindex="5" class="button-primary" value="<?php esc_attr_e( 'Send push notification', 'blimply' ) ?>" />
 					<?php endif; ?>
 					<img class="waiting" style="display:none;" src="<?php echo esc_url( admin_url( 'images/wpspin_light.gif' ) ); ?>" alt="" />
 				</span>
 				<br class="clear" />
 			</p>
+</fieldset>
 		</form>
 <?php
 	}
