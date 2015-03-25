@@ -112,11 +112,8 @@ class Blimply {
 		$this->options = array_merge( $defaults, (array) $this->options );
 
 		$this->sounds = get_option( 'blimply_sounds' );
-		$this->airships[ $this->options['blimply_name'] ] = new Airship( $this->options['blimply_app_key'], $this->options['blimply_app_secret'] );
-		// Pass the reference to convenience var
-		// We don't use multiple Airships yet.
-		// Although we can, there's no UI for switching Airships.
-		$this->airship = &$this->airships[ $this->options['blimply_name'] ];
+
+		$this->airship = new Airship( $this->options['blimply_app_key'], $this->options['blimply_app_secret'] );
 		// We don't use built-in WP UI, instead we choose tag in custom Blimply meta box
 		$this->tags = get_terms( 'blimply_tags', array( 'hide_empty' => 0 ) );
 
