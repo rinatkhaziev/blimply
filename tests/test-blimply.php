@@ -103,5 +103,13 @@ class Blimply_UnitTestCase extends WP_UnitTestCase {
 		$this->assertTrue( is_wp_error( $bad_payload_response ) );
 	}
 
+	function test_create_tag() {
+		remove_action( 'create_term', array( $this->blimply, 'action_create_term' ) );
+		$term = wp_insert_term( 'Test Blimply Term ' . current_time( 'timestamp' ), 'blimply_tags' );
+
+		$response = $this->blimply->action_create_term( $term['term_id'], $term['term_taxonomy_id' ], 'blimply_tags' );
+		var_dump( $response );
+	}
+
 }
 

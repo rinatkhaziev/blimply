@@ -174,7 +174,8 @@ class Blimply {
 		// Let's sync
 
 		try {
-			$response = $this->airship->_request( BASE_URL . "/tags/{$tag->slug}", 'PUT', null );
+			// $response = $this->airship->_request( BASE_URL . "/tags/{$tag->slug}", 'PUT', null );
+			$response = $this->airship->request( 'PUT', null, $this->airship->buildUrl( "/api/tags/{$tag->slug}" ) );
 		} catch ( \Exception $e ) {
 			return new WP_Error( $e->getCode(), $e->getMessage() );
 		}
