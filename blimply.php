@@ -166,20 +166,20 @@ class Blimply {
 	 * @param string  $taxonomy
 	 */
 	function action_create_term( $term_id, $tt_id, $taxonomy ) {
+		//
 		if ( 'blimply_tags' != $taxonomy )
 			return;
+
 		$tag = get_term( $term_id, $taxonomy );
 		// Let's sync
-		if ( ! is_wp_error( $tag ) ) {
-			try {
-				$response = $this->airship->_request( BASE_URL . "/tags/{$tag->slug}", 'PUT', null );
-			} catch ( Exception $e ) {
-				// @todo do something with exception
-			}
-			if ( isset( $response[0] ) && $response[0] == 201 ) {
-				// @todo process ok result
-			}
+
+		try {
+			$response = $this->airship->_request( BASE_URL . "/tags/{$tag->slug}", 'PUT', null );
+		} catch ( \Exception $e ) {
+			return new WP_Error( $e->getCode(), $e->getMessage() );
 		}
+
+		return $response;
 	}
 
 	/**
