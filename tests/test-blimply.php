@@ -18,6 +18,7 @@ class Blimply_UnitTestCase extends WP_UnitTestCase {
 
 	/**
 	 * Init
+	 *
 	 * @return [type] [description]
 	 */
 	function setup() {
@@ -48,7 +49,7 @@ class Blimply_UnitTestCase extends WP_UnitTestCase {
 	}
 
 	function test_api_keys() {
-		foreach( $this->blimply->options as $key => $value ) {
+		foreach ( $this->blimply->options as $key => $value ) {
 			// Only test required API creds
 			if ( ! in_array( $key, array( 'blimply_name', 'blimply_app_key', 'blimply_app_secret' ) ) )
 				continue;
@@ -72,31 +73,31 @@ class Blimply_UnitTestCase extends WP_UnitTestCase {
 	}
 
 	function test_successful_broadcast() {
-		$response = $this->blimply->_send_broadcast_or_push( 'My valid test message! From ' . home_url('/'), 'broadcast' );
+		$response = $this->blimply->_send_broadcast_or_push( 'My valid test message! From ' . home_url( '/' ), 'broadcast' );
 
 		$this->assertFalse( is_wp_error( $response ) );
 	}
 
 	function test_successful_push_to_tag() {
-		$response = $this->blimply->_send_broadcast_or_push( 'My valid test message! From ' . home_url('/'), 'news' );
+		$response = $this->blimply->_send_broadcast_or_push( 'My valid test message! From ' . home_url( '/' ), 'news' );
 
 		$this->assertFalse( is_wp_error( $response ) );
 	}
 
 	function test_successful_push_with_extra_and_sound() {
-		$response = $this->blimply->_send_broadcast_or_push( 'My valid test message with url and sound! From ' . home_url('/'), 'broadcast', home_url( '/' ), false );
+		$response = $this->blimply->_send_broadcast_or_push( 'My valid test message with url and sound! From ' . home_url( '/' ), 'broadcast', home_url( '/' ), false );
 		$this->assertFalse( is_wp_error( $response ) );
 	}
 
 	function test_successful_push_with_extra_no_sound() {
-		$response = $this->blimply->_send_broadcast_or_push( 'My valid test message with url and no sound! From ' . home_url('/'), 'broadcast', home_url( '/' ), true );
+		$response = $this->blimply->_send_broadcast_or_push( 'My valid test message with url and no sound! From ' . home_url( '/' ), 'broadcast', home_url( '/' ), true );
 
 		$this->assertFalse( is_wp_error( $response ) );
 	}
 
 	function test_catch_bad_request() {
 		add_filter( 'blimply_payload_override', function( $payload ) { return array( 'malformed payload' ); } );
-		$bad_payload_response = $this->blimply->_send_broadcast_or_push( 'My valid test message with url and no sound! From ' . home_url('/'), 'broadcast', home_url( '/' ), true );
+		$bad_payload_response = $this->blimply->_send_broadcast_or_push( 'My valid test message with url and no sound! From ' . home_url( '/' ), 'broadcast', home_url( '/' ), true );
 		// $response = $this->
 		$this->assertTrue( is_wp_error( $bad_payload_response ) );
 	}
@@ -110,4 +111,3 @@ class Blimply_UnitTestCase extends WP_UnitTestCase {
 	}
 
 }
-

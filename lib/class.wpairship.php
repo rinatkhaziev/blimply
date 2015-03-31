@@ -9,7 +9,6 @@ class WpAirship extends Airship {
 
     public $mock_response;
 
-
     /**
      * Send an authenticated request to the Urban Airship API. The request is
      * authenticated with the key and secret.
@@ -42,6 +41,7 @@ class WpAirship extends Airship {
 
         /**
          * Logger is disabled in production, so this won't do nothing unless WP_DEBUG is enabled
+         *
          * @var [type]
          */
         $logger = UALog::getLogger();
@@ -74,11 +74,11 @@ class WpAirship extends Airship {
     /**
      * Action callback that maps WP_HTTP response object to Httpful/Request properties as a shim
      *
-     * @param [type] $response WP_HTTP repsonse
-     * @param [type] $context  always 'response'
-     * @param [type] $class    [description]
-     * @param [type] $args     [description]
-     * @param [type] $url      [description]
+     * @param [type]  $response WP_HTTP repsonse
+     * @param [type]  $context  always 'response'
+     * @param [type]  $class    [description]
+     * @param [type]  $args     [description]
+     * @param [type]  $url      [description]
      */
     public function set_mock_response_object( $response, $context, $class, $args, $url  ) {
         $this->mock_response = new \stdClass;
