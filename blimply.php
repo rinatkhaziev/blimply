@@ -31,13 +31,11 @@ define( 'BLIMPLY_FILE_PATH' , BLIMPLY_ROOT . '/' . basename( __FILE__ ) );
 define( 'BLIMPLY_URL' , plugins_url( '/', __FILE__ ) );
 define( 'BLIMPLY_PREFIX' , 'blimply' );
 
-// Bootstrap
-// require_once BLIMPLY_ROOT . '/lib/wp-urban-airship/urbanairship.php';
-require_once BLIMPLY_ROOT . '/lib/settings-api-class/class.settings-api.php';
-require_once BLIMPLY_ROOT . '/lib/blimply-settings.php';
-
 // Composer autoload
 require_once BLIMPLY_ROOT . '/vendor/autoload.php';
+
+require_once BLIMPLY_ROOT . '/vendor/rinatkhaziev/wordpress-settings-api-class/class.settings-api.php';
+require_once BLIMPLY_ROOT . '/lib/blimply-settings.php';
 
 require_once BLIMPLY_ROOT . '/lib/class.wpairship.php';
 
