@@ -7,7 +7,7 @@
 // Composer autoload
 require_once BLIMPLY_ROOT . '/vendor/autoload.php';
 
-use UrbanAirship\Airship;
+use UrbanAirship\WpAirship as Airship;
 use UrbanAirship\UALog;
 use UrbanAirship\Push as P;
 use Monolog\Logger;
@@ -86,7 +86,7 @@ class Blimply_UnitTestCase extends WP_UnitTestCase {
 
 	function test_successful_push_with_extra_and_sound() {
 		$response = $this->blimply->_send_broadcast_or_push( 'My valid test message with url and sound! From ' . home_url('/'), 'broadcast', home_url( '/' ), false );
-
+		var_dump( $response );
 		$this->assertFalse( is_wp_error( $response ) );
 	}
 

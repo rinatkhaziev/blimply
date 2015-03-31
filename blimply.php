@@ -39,8 +39,10 @@ require_once BLIMPLY_ROOT . '/lib/blimply-settings.php';
 // Composer autoload
 require_once BLIMPLY_ROOT . '/vendor/autoload.php';
 
+require_once BLIMPLY_ROOT . '/lib/class.wpairship.php';
 
-use UrbanAirship\Airship;
+
+use UrbanAirship\WpAirship as Airship;
 use UrbanAirship\UALog;
 use UrbanAirship\Push as P;
 use Monolog\Logger;
