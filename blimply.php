@@ -95,7 +95,6 @@ class Blimply {
 		if ( ! in_array( $pagenow, array( 'post-new.php', 'post.php', 'index.php', 'options.php' ) ) && ! defined( 'DOING_AJAX' ) )
 			return;
 		$defaults = array(
-			BLIMPLY_PREFIX  . '_name' => '',
 			BLIMPLY_PREFIX  . '_app_key' => '',
 			BLIMPLY_PREFIX . '_app_secret' => '',
 			BLIMPLY_PREFIX . '_character_limit' => 140,

@@ -51,7 +51,7 @@ class Blimply_UnitTestCase extends WP_UnitTestCase {
 	function test_api_keys() {
 		foreach ( $this->blimply->options as $key => $value ) {
 			// Only test required API creds
-			if ( ! in_array( $key, array( 'blimply_name', 'blimply_app_key', 'blimply_app_secret' ) ) )
+			if ( ! in_array( $key, array( 'blimply_app_key', 'blimply_app_secret' ) ) )
 				continue;
 
 			$this->assertNotEmpty( $value );
