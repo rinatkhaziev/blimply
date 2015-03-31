@@ -1,9 +1,8 @@
 <?php
 /**
- *
- * Test case for Drop It
- *
+ * Blimply test suite
  */
+
 // Composer autoload
 require_once BLIMPLY_ROOT . '/vendor/autoload.php';
 

@@ -82,11 +82,11 @@ class WpAirship extends Airship {
      */
     public function set_mock_response_object( $response, $context, $class, $args, $url  ) {
         $this->mock_response = new \stdClass;
-        $this->mock_response->raw_body = $response['body'];
-        $this->mock_response->body = json_decode( $response['body'] );
-        $this->mock_response->code = $response['response']['code'];
-        $this->mock_response->headers = $response['headers'];
-        $this->mock_response->raw_headers = json_encode( $response['headers'] );
+        $this->mock_response->raw_body = is_wp_error( $response ) ? $response->get_error_message() : $response['body'];
+        $this->mock_response->body = is_wp_error( $response ) ? $response->get_error_message() : json_decode( $response['body'] );
+        $this->mock_response->code = is_wp_error( $response ) ? $response->get_error_code() : $response['response']['code'];
+        $this->mock_response->headers = is_wp_error( $response ) ? array() : $response['headers'];
+        $this->mock_response->raw_headers =  is_wp_error( $response ) ? array() : json_encode( $response['headers'] );
 
         return $this;
     }
