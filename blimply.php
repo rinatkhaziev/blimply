@@ -45,9 +45,7 @@ require_once BLIMPLY_ROOT . '/lib/class.wpairship.php';
 use UrbanAirship\WpAirship as Airship;
 use UrbanAirship\UALog;
 use UrbanAirship\Push as P;
-use Monolog\Logger;
-use Monolog\Handler\StreamHandler;
-use Monolog\Handler\NullHandler;
+
 
 class Blimply {
 
@@ -118,11 +116,6 @@ class Blimply {
 		$this->airship = new Airship( $this->options['blimply_app_key'], $this->options['blimply_app_secret'] );
 		// We don't use built-in WP UI, instead we choose tag in custom Blimply meta box
 		$this->tags = get_terms( 'blimply_tags', array( 'hide_empty' => 0 ) );
-
-		if ( ! defined( 'WP_DEBUG' ) || ! WP_DEBUG ) {
-			// Bust logging, not allowed on wp.com
-			UALog::setLogHandlers( array( new NullHandler ) );
-		}
 	}
 
 	/**

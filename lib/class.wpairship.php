@@ -1,7 +1,13 @@
 <?php
 namespace UrbanAirship;
 
+use Monolog\Logger;
+use Monolog\Handler\StreamHandler;
+use Monolog\Handler\NullHandler;
+
 class WpAirship extends Airship {
+
+    public $mock_response;
 
 
     /**
@@ -19,6 +25,11 @@ class WpAirship extends Airship {
      * @throws AirshipException
      */
     public function request( $method, $body, $uri, $contentType=null, $version=3, $request=null ) {
+        // As a result of replacing Httpful/Request with WP HTTP,
+        // We need to map WP_HTTP response object to Httpful/Request properties as a shim,
+        // Action is not necessary but looks a bit cleaner
+        add_action( 'http_api_debug', array( $this, 'set_mock_response_object' ), 10, 5 );
+
         $headers = array(
             'Authorization' => 'Basic ' . base64_encode( "{$this->key}:{$this->secret}" ),
             "Accept" => sprintf( self::VERSION_STRING, $version )
@@ -29,6 +40,10 @@ class WpAirship extends Airship {
         }
         $request = new \WP_Http;
 
+        /**
+         * Logger is disabled in production, so this won't do nothing unless WP_DEBUG is enabled
+         * @var [type]
+         */
         $logger = UALog::getLogger();
         $logger->debug( "Making request", array(
                 "method" => $method,
@@ -36,21 +51,44 @@ class WpAirship extends Airship {
                 "headers" => $headers,
                 "body" => $body ) );
 
+        // Make a request (fires http_api_debug action that sets object property $mock_response)
         $response = $request->request( $uri,  array( 'method' => $method, 'body' => $body, 'headers' => $headers ) );
-        if ( is_wp_error( $response ) || 300 <= $response['response']['code'] )
-            throw AirshipException::fromResponse( $mock_response );
 
-        // TODO: map WP_HTTP API response to expected format/handle exceptioms better
-        $mock_response = new \stdClass;
-        $mock_response->raw_body = $response['body'];
-        $mock_response->body = json_decode( $response['body'] );
-        $mock_response->code = $response['response']['code'];
+        if ( is_wp_error( $response ) || 300 <= $response['response']['code'] )
+            throw AirshipException::fromResponse( $this->mock_response );
 
         $logger->debug( "Received response", array(
-                "status" => $mock_response->code,
-                "headers" => '',
-                "body" => $mock_response->raw_body ) );
+                "status" => $this->mock_response->code,
+                "headers" => $this->mock_response->raw_headers,
+                "body" => $this->mock_response->raw_body ) );
 
-        return $mock_response;
+        // Return mock response object for any components of UA library that make requests
+        return $this->mock_response;
     }
+
+    /**
+     * Action callback that maps WP_HTTP response object to Httpful/Request properties as a shim
+     *
+     * @param [type] $response WP_HTTP repsonse
+     * @param [type] $context  always 'response'
+     * @param [type] $class    [description]
+     * @param [type] $args     [description]
+     * @param [type] $url      [description]
+     */
+    public function set_mock_response_object( $response, $context, $class, $args, $url  ) {
+        $this->mock_response = new \stdClass;
+        $this->mock_response->raw_body = $response['body'];
+        $this->mock_response->body = json_decode( $response['body'] );
+        $this->mock_response->code = $response['response']['code'];
+        $this->mock_response->headers = $response['headers'];
+        $this->mock_response->raw_headers = json_encode( $response['headers'] );
+
+        return $this;
+    }
+}
+/**
+ * Disable Request Logging if WP_DEBUG is not enabled
+ */
+if ( ! defined( 'WP_DEBUG' ) || ! WP_DEBUG ) {
+    UALog::setLogHandlers( array( new NullHandler ) );
 }
