@@ -25,5 +25,13 @@
     "prefer-stable": true,
     "config": {
 			"optimize-autoloader": true
-		}
+	},
+    "scripts": {
+        "post-install-cmd": [
+            "rm -rf vendor/nategood"
+        ],
+        "post-update-cmd": [
+            "rm -rf vendor/nategood"
+        ],
+    }
 }
