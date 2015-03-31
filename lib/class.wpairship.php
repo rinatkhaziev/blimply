@@ -54,7 +54,12 @@ class WpAirship extends Airship {
         // Make a request (fires http_api_debug action that sets object property $mock_response)
         $response = $request->request( $uri,  array( 'method' => $method, 'body' => $body, 'headers' => $headers ) );
 
-        if ( is_wp_error( $response ) || 300 <= $response['response']['code'] )
+        // Check the response for wp_error (that's what WP HTTP throws when there was an issue with request)
+        if ( is_wp_error( $response ) )
+            return $response;
+
+        // Check for "successful" WP HTTP request and see if UA returns any non-2xx response code
+        if ( 300 <= $response['response']['code'] )
             throw AirshipException::fromResponse( $this->mock_response );
 
         $logger->debug( "Received response", array(
