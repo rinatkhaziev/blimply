@@ -40,6 +40,9 @@ Plugin is maintained on [Github](https://github.com/rinatkhaziev/blimply). Comme
 
 == Changelog ==
 
+= 0.6 =
+* Upgraded plugin to Urban Airship v3 APIs
+
 = 0.5.1 =
 * Implemented character limit for post meta box
 
