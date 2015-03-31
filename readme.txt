@@ -13,6 +13,7 @@ Blimply is unofficial WordPress Plugin for [Urban Airship](http://urbanairship.c
 
 You will need an [Urban Airship](http://urbanairship.com/) account in order to be able to use this plugin. The plugin features the ability to send  push notifications for posts/pages/custom post types, and a handy Dashboard widget.
 
+NB: this plugin requires PHP 5.3+
 
 == Installation ==
 
