@@ -17,8 +17,6 @@ Blimply is unofficial WordPress Plugin for [Urban Airship](http://urbanairship.c
 + Set custom sounds for push notifications (iOS only)
 + Set quiet time for pushes (no sound)
 
-account in order to be able to use this plugin. The plugin features the ability to make a push for posts/pages/custom post types, and a handy Dashboard widget.
-
 ##  Initial installation
 1. `git clone https://github.com/rinatkhaziev/blimply.git` in your WP plugins directory
 1. Do `composer install --no-dev`
