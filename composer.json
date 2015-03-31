@@ -32,6 +32,6 @@
         ],
         "post-update-cmd": [
             "rm -rf vendor/nategood"
-        ],
+        ]
     }
 }
