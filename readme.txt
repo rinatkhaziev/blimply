@@ -2,12 +2,12 @@
 Contributors: rinatkhaziev
 Tags: push, urban airship, notifications, widget, iphone, android, blackberry, ios
 Requires at least: 3.3
-Tested up to: 4.0
+Tested up to: 4.2
 Stable tag: 0.5.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Blimply will allow you to send push notifications to your mobile users utilizing Urban Airship API.
+Blimply is unofficial WordPress Plugin for [Urban Airship](http://urbanairship.com/). It's based on official [UA PHP library](https://github.com/urbanairship/php-library2) and supports Urban Airship v3 APIs.
 
 == Description ==
 
