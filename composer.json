@@ -19,7 +19,7 @@
         }
     ],
     "require":{
-        "urbanairship/urbanairship": "0.1.3",
+        "urbanairship/urbanairship": "dev-master",
         "rinatkhaziev/wordpress-settings-api-class": "dev-master"
     },
     "require-dev": {

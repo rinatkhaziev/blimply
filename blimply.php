@@ -81,7 +81,7 @@ class Blimply {
 					'singular_name' => __( 'Urban Airship Tags', 'blimply' ),
 				),
 				'show_in_nav_menus' => false,
-				'show_ui' => false
+				'show_ui' => true
 			) );
 		load_plugin_textdomain( 'blimply', false, dirname( plugin_basename( __FILE__ ) ) . '/lib/languages/' );
 	}

@@ -22,7 +22,6 @@ class Blimply_UnitTestCase extends WP_UnitTestCase {
 	 * @return [type] [description]
 	 */
 	function setup() {
-		parent::setup();
 		global $blimply;
 		$this->blimply = $blimply;
 		$this->blimply->action_admin_init();
